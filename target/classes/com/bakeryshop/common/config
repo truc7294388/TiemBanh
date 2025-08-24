@@ -1,0 +1,16 @@
+package com.bakeryshop.config;
+
+import lombok.Data;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.Configuration;
+
+@Configuration
+@ConfigurationProperties(prefix = "vnpay")
+@Data
+public class VNPayConfig {
+    private String vnp_PayUrl;
+    private String vnp_ReturnUrl;
+    private String vnp_TmnCode;
+    private String secretKey;
+    private String vnp_ApiUrl;
+} 
