@@ -1,0 +1,169 @@
+:root {
+    --primary: #FF69B4;       /* Hot Pink - màu chủ đạo */
+    --primary-dark: #FF1493;  /* Deep Pink - màu đậm hơn cho hover */
+    --primary-light: #FFB6C1; /* Light Pink - màu nhạt hơn cho background */
+    --accent: #FF69B4;        /* Hot Pink - màu nhấn */
+}
+
+/* Navbar */
+.navbar {
+    background-color: var(--primary) !important;
+}
+
+.navbar-dark .navbar-nav .nav-link {
+    color: white !important;
+}
+
+.navbar-dark .navbar-nav .nav-link:hover {
+    color: var(--primary-light) !important;
+}
+
+/* Buttons */
+.btn-primary {
+    background-color: var(--primary) !important;
+    border-color: var(--primary) !important;
+}
+
+.btn-primary:hover {
+    background-color: var(--primary-dark) !important;
+    border-color: var(--primary-dark) !important;
+}
+
+.btn-outline-primary {
+    color: var(--primary) !important;
+    border-color: var(--primary) !important;
+}
+
+.btn-outline-primary:hover {
+    color: white !important;
+    background-color: var(--primary) !important;
+}
+
+/* Links */
+a {
+    /* color: var(--primary) !important; */
+}
+
+a:hover {
+    color: var(--primary-dark) !important;
+}
+
+/* Cards */
+.card {
+    border-color: var(--primary-light) !important;
+}
+
+.card-header {
+    background-color: var(--primary-light) !important;
+}
+
+/* Badges */
+.badge.bg-primary {
+    background-color: var(--primary) !important;
+}
+
+/* Form elements */
+.form-control:focus {
+    border-color: var(--primary) !important;
+    box-shadow: 0 0 0 0.25rem rgba(255, 105, 180, 0.25) !important;
+}
+
+/* Pagination */
+.page-item.active .page-link {
+    background-color: var(--primary) !important;
+    border-color: var(--primary) !important;
+}
+
+.page-link {
+    color: var(--primary) !important;
+}
+
+.page-link:hover {
+    color: var(--primary-dark) !important;
+}
+
+/* Background utilities */
+.bg-primary {
+    background-color: var(--primary) !important;
+}
+
+.text-primary {
+    color: var(--primary) !important;
+}
+
+/* Product cards */
+.product-card {
+    border: 1px solid var(--primary-light);
+    transition: all 0.3s ease;
+}
+
+.product-card:hover {
+    border-color: var(--primary);
+    box-shadow: 0 0 10px rgba(255, 105, 180, 0.2);
+}
+
+/* Cart badge */
+.cart-badge {
+    background-color: var(--primary-dark) !important;
+}
+
+/* Footer */
+.footer {
+    background-color: var(--primary-light) !important;
+    color: var(--primary-dark) !important;
+}
+
+/* Custom backgrounds */
+.bg-pink-light {
+    background-color: var(--primary-light) !important;
+}
+
+.bg-pink {
+    background-color: var(--primary) !important;
+}
+
+.bg-pink-dark {
+    background-color: var(--primary-dark) !important;
+}
+
+/* Order status badges */
+.badge.bg-warning {
+    background-color: #FFC0CB !important; /* Pink */
+    color: #FF1493 !important;
+}
+
+.badge.bg-info {
+    background-color: #FFB6C1 !important; /* Light Pink */
+    color: #FF1493 !important;
+}
+
+.badge.bg-primary {
+    background-color: #FF69B4 !important; /* Hot Pink */
+}
+
+.badge.bg-success {
+    background-color: #FF1493 !important; /* Deep Pink */
+}
+
+/* Table hover effect */
+.table-hover tbody tr:hover {
+    background-color: rgba(255, 105, 180, 0.1) !important;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: #FFE4E1;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--primary);
+    border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--primary-dark);
+} 

@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="admin/layout/header :: head"></head>
+<body class="sb-nav-fixed">
+    <nav th:replace="admin/layout/header :: navbar"></nav>
+    <div id="layoutSidenav">
+        <div th:replace="admin/layout/sidebar :: sidebar"></div>
+        <div id="layoutSidenav_content">
+            <main>
+                <div class="container-fluid px-4">
+                    <h1 class="mt-4">Sản phẩm sắp hết hàng</h1>
+                    <ol class="breadcrumb mb-4">
+                        <li class="breadcrumb-item"><a th:href="@{/admin}">Dashboard</a></li>
+                        <li class="breadcrumb-item"><a th:href="@{/admin/products}">Sản phẩm</a></li>
+                        <li class="breadcrumb-item active">Sắp hết hàng</li>
+                    </ol>
+
+                    <!-- Filter -->
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <form th:action="@{/admin/products/low-stock}" method="get" class="row g-3">
+                                <div class="col-md-4">
+                                    <label for="minStock" class="form-label">Số lượng tồn kho tối thiểu</label>
+                                    <input type="number" class="form-control" id="minStock" name="minStock"
+                                           th:value="${minStock}" min="0">
+                                </div>
+                                <div class="col-12">
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="fas fa-filter"></i> Lọc
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Products Table -->
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <i class="fas fa-exclamation-triangle me-1"></i>
+                            Danh sách sản phẩm sắp hết hàng (tồn kho <= [[${minStock}]])
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Ảnh</th>
+                                            <th>Tên sản phẩm</th>
+                                            <th>Danh mục</th>
+                                            <th>Giá</th>
+                                            <th>Tồn kho</th>
+                                            <th>Thao tác</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr th:if="${#lists.isEmpty(products)}">
+                                            <td colspan="7" class="text-center">
+                                                <p class="my-5 text-muted">
+                                                    <i class="fas fa-box-open fa-3x mb-3"></i><br>
+                                                    Không có sản phẩm nào sắp hết hàng
+                                                </p>
+                                            </td>
+                                        </tr>
+                                        <tr th:each="product : ${products}">
+                                            <td th:text="${product.id}">1</td>
+                                            <td>
+                                                <img th:if="${product.imageUrl}" 
+                                                     th:src="@{'/uploads/' + ${product.imageUrl}}"
+                                                     class="img-thumbnail" style="max-width: 50px;">
+                                                <img th:unless="${product.imageUrl}"
+                                                     th:src="@{/images/no-image.png}"
+                                                     class="img-thumbnail" style="max-width: 50px;">
+                                            </td>
+                                            <td>
+                                                <span th:text="${product.name}"></span>
+                                                <div class="badges">
+                                                    <span th:if="${product.bestSeller}" 
+                                                          class="badge bg-danger">Bán chạy</span>
+                                                    <span th:if="${product.newArrival}" 
+                                                          class="badge bg-success">Mới</span>
+                                                </div>
+                                            </td>
+                                            <td th:text="${product.categoryName}"></td>
+                                            <td th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT') + ' VNĐ'}">
+                                                0 VNĐ
+                                            </td>
+                                            <td>
+                                                <span th:text="${product.stock}"></span>
+                                                <span th:if="${product.stock <= 5}" 
+                                                      class="badge bg-warning text-dark">Sắp hết</span>
+                                                <span th:if="${product.stock <= 0}" 
+                                                      class="badge bg-danger">Hết hàng</span>
+                                            </td>
+                                            <td>
+                                                <div class="btn-group" role="group">
+                                                    <a th:href="@{/admin/products/edit/{id}(id=${product.id})}" 
+                                                       class="btn btn-primary btn-sm">
+                                                        <i class="fas fa-edit"></i> Cập nhật tồn kho
+                                                    </a>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+            <footer th:replace="admin/layout/footer :: footer"></footer>
+        </div>
+    </div>
+
+    <div th:replace="admin/layout/footer :: scripts"></div>
+</body>
+</html> 

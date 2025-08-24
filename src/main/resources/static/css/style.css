@@ -1,0 +1,373 @@
+/* Hero Section */
+.carousel-item {
+    height: 500px;
+}
+
+.carousel-item img {
+    height: 500px;
+    object-fit: cover;
+}
+
+.carousel-caption {
+    background: rgba(0, 0, 0, 0.5);
+    padding: 20px;
+    border-radius: 10px;
+}
+
+/* Featured Categories */
+.featured-categories .card {
+    transition: transform 0.3s;
+}
+
+.featured-categories .card:hover {
+    transform: translateY(-5px);
+}
+
+/* Best Sellers */
+.best-sellers .card {
+    transition: transform 0.3s;
+}
+
+.best-sellers .card:hover {
+    transform: translateY(-5px);
+}
+
+.best-sellers .card-img-top {
+    height: 200px;
+    object-fit: cover;
+}
+
+/* Latest Blogs */
+.latest-blogs .card-img-top {
+    height: 200px;
+    object-fit: cover;
+}
+
+/* Features */
+.features i {
+    transition: transform 0.3s;
+}
+
+.features i:hover {
+    transform: scale(1.2);
+}
+
+/* Footer */
+.footer {
+    margin-top: 0 !important;
+}
+
+.social-links a {
+    transition: color 0.3s;
+}
+
+.social-links a:hover {
+    color: #0d6efd !important;
+}
+
+/* Cart Badge */
+.cart-count {
+    position: absolute;
+    top: 0;
+    right: 0;
+    transform: translate(50%, -50%);
+}
+
+/* Product Card */
+.card {
+    border: none;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.card-footer {
+    background: transparent;
+}
+
+/* Buttons */
+.btn-outline-primary:hover {
+    transform: translateY(-2px);
+    transition: transform 0.3s;
+}
+
+/* Navigation */
+.navbar {
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.navbar-brand img {
+    height: 40px;
+    width: auto;
+    transition: transform 0.3s;
+}
+
+.navbar-brand img:hover {
+    transform: scale(1.1);
+}
+
+/* Placeholder styles for missing images */
+.carousel-item:not(:has(img)),
+.card:not(:has(img)),
+.navbar-brand:not(:has(img)) {
+    background-color: #f8f9fa;
+    min-height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.carousel-item:not(:has(img))::before,
+.card:not(:has(img))::before,
+.navbar-brand:not(:has(img))::before {
+    content: "Image placeholder";
+    color: #6c757d;
+    font-style: italic;
+}
+
+.card-img-top {
+    height: 200px;
+    object-fit: cover;
+} 
+
+
+/* General Styles */
+body {
+    font-family: 'Playfair Display', serif;
+    background-color: #FFF5F5; /* Màu nền hồng phấn nhạt */
+    color: #4A3C31; /* Màu chữ nâu đậm, gợi cảm giác bánh ngọt */
+}
+
+/* Navbar (giả định trong layout/header) */
+.navbar {
+    background-color: #FFD1DC; /* Hồng phấn pastel */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    padding: 10px 0;
+}
+.navbar-brand, .nav-link {
+    color: #4A3C31 !important;
+    font-weight: 600;
+}
+.nav-link:hover {
+    color: #FF8A8A !important; /* Màu hồng đậm khi hover */
+    transition: color 0.3s ease;
+}
+
+/* Hero Carousel */
+#heroCarousel {
+    margin-top: 20px;
+}
+.carousel-inner {
+    border-radius: 15px;
+    overflow: hidden;
+}
+.carousel-item img {
+    transition: transform 0.5s ease;
+}
+.carousel-item:hover img {
+    transform: scale(1.05); /* Zoom nhẹ khi hover */
+}
+.carousel-caption {
+    background-color: rgba(0, 0, 0, 0.6);
+    border-radius: 10px;
+    padding: 20px;
+    animation: fadeInUp 1s ease;
+}
+.carousel-caption h2 {
+    font-family: 'Dancing Script', cursive;
+    font-size: 3rem;
+    color: #FFD1DC;
+}
+.carousel-caption p {
+    font-size: 1.2rem;
+    color: #FFF5F5;
+}
+.carousel-caption .btn-primary {
+    background-color: #FF8A8A;
+    border-color: #FF8A8A;
+    padding: 10px 20px;
+    font-weight: 600;
+}
+.carousel-caption .btn-primary:hover {
+    background-color: #FF6B6B;
+    border-color: #FF6B6B;
+    transform: translateY(-2px);
+    transition: all 0.3s ease;
+}
+.carousel-control-prev, .carousel-control-next {
+    width: 5%;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+}
+.carousel-indicators button {
+    background-color: #FF8A8A;
+    border-radius: 50%;
+    width: 12px;
+    height: 12px;
+}
+.carousel-indicators .active {
+    background-color: #FFD1DC;
+}
+
+/* Featured Categories */
+.featured-categories {
+    background: linear-gradient(to bottom, #FFF5F5, #FFE4E1);
+    padding: 60px 0;
+}
+.featured-categories h2 {
+    font-family: 'Dancing Script', cursive;
+    color: #FF6B6B;
+    font-size: 2.5rem;
+    margin-bottom: 40px;
+}
+.card {
+    border-radius: 15px;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15) !important;
+}
+.card-img-top {
+    object-fit: cover;
+    height: 220px;
+    transition: transform 0.3s ease;
+}
+.card:hover .card-img-top {
+    transform: scale(1.05);
+}
+.card-body {
+    background-color: #FFF5F5;
+    padding: 20px;
+    text-align: center;
+}
+.card-title {
+    font-family: 'Playfair Display', serif;
+    color: #4A3C31;
+    font-size: 1.5rem;
+}
+.btn-outline-primary {
+    border-color: #FF8A8A;
+    color: #FF8A8A;
+    font-weight: 600;
+}
+.btn-outline-primary:hover {
+    background-color: #FF8A8A;
+    color: #FFF5F5;
+    transform: translateY(-2px);
+    transition: all 0.3s ease;
+}
+
+/* Best Sellers */
+.best-sellers {
+    background: #FFE4E1; /* Màu nền hồng đào nhạt */
+    padding: 60px 0;
+}
+.best-sellers h2 {
+    font-family: 'Dancing Script', cursive;
+    color: #FF6B6B;
+    font-size: 2.5rem;
+    margin-bottom: 40px;
+}
+.card-footer {
+    background-color: #FFF5F5;
+    padding: 15px;
+}
+.btn-primary {
+    background-color: #FF8A8A;
+    border-color: #FF8A8A;
+    font-weight: 600;
+}
+.btn-primary:hover {
+    background-color: #FF6B6B;
+    border-color: #FF6B6B;
+    transform: translateY(-2px);
+    transition: all 0.3s ease;
+}
+
+/* Latest Blogs */
+.latest-blogs {
+    background: #FFF5F5;
+    padding: 60px 0;
+}
+.latest-blogs h2 {
+    font-family: 'Dancing Script', cursive;
+    color: #FF6B6B;
+    font-size: 2.5rem;
+    margin-bottom: 40px;
+}
+.card-text {
+    color: #6B5B4A;
+}
+
+/* Features */
+.features {
+    background: #FFE4E1;
+    padding: 60px 0;
+}
+.features i {
+    color: #FF8A8A;
+    transition: transform 0.3s ease;
+}
+.features h5 {
+    font-family: 'Playfair Display', serif;
+    color: #4A3C31;
+}
+.features p {
+    color: #6B5B4A;
+}
+.features .col-md-3:hover i {
+    transform: scale(1.2);
+}
+
+/* Toast Notification */
+.toast {
+    border-radius: 10px;
+    border: 1px solid #FF8A8A;
+}
+.toast-header {
+    background-color: #FFD1DC;
+    color: #4A3C31;
+}
+.toast-body {
+    background-color: #FFF5F5;
+    color: #4A3C31;
+}
+.bg-danger.text-white .toast-header {
+    background-color: #FF6B6B;
+    color: #FFF5F5;
+}
+.bg-danger.text-white .toast-body {
+    background-color: #FFE4E1;
+    color: #4A3C31;
+}
+
+/* Animation Keyframes */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .carousel-caption h2 {
+        font-size: 2rem;
+    }
+    .carousel-caption p {
+        font-size: 1rem;
+    }
+    .carousel-item img {
+        height: 300px;
+    }
+    .card-img-top {
+        height: 180px;
+    }
+    .featured-categories h2, .best-sellers h2, .latest-blogs h2 {
+        font-size: 2rem;
+    }
+}

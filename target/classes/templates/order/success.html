@@ -1,0 +1,356 @@
+[⚠️ Suspicious Content] <!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Thanh toán thành công - Bakery Shop</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Dancing+Script:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        /* General Styles */
+        body {
+            font-family: 'Playfair Display', serif;
+            background: linear-gradient(to bottom, #FFF5F5, #FFE4E1);
+            color: #4A3C31;
+            margin: 0;
+            min-height: 100vh;
+            animation: pageFadeIn 0.8s ease forwards;
+        }
+
+        /* Page Transition */
+        @keyframes pageFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .page-transition-exit {
+            animation: pageFadeOut 0.4s ease forwards;
+        }
+        @keyframes pageFadeOut {
+            from {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            to {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+        }
+
+        /* Navbar */
+        .navbar {
+            background-color: #FFD1DC;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            animation: slideDown 0.5s ease;
+        }
+        .navbar-brand, .nav-link {
+            color: #4A3C31 !important;
+            font-weight: 600;
+            transition: color 0.3s ease, transform 0.3s ease;
+        }
+        .nav-link:hover {
+            color: #FF6B6B !important;
+            transform: scale(1.05);
+        }
+        @keyframes slideDown {
+            from {
+                transform: translateY(-100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        /* Page Title */
+        h1 {
+            font-family: 'Dancing Script', cursive;
+            font-size: 3rem;
+            color: #FF6B6B;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
+            animation: textPop 1.2s ease;
+        }
+        .breadcrumb {
+            background: transparent;
+            margin-bottom: 0;
+        }
+        .breadcrumb-item a {
+            color: #FF8A8A;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        .breadcrumb-item a:hover {
+            color: #FF6B6B;
+        }
+        .breadcrumb-item.active {
+            color: #6B5B4A;
+        }
+        @keyframes textPop {
+            0% {
+                transform: scale(0.8);
+                opacity: 0;
+            }
+            80% {
+                transform: scale(1.05);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        /* Alerts */
+        .alert {
+            border-radius: 10px;
+            animation: fadeInUp 0.5s ease;
+            margin-bottom: 20px;
+        }
+        .alert-success {
+            background-color: #FFE4E1;
+            color: #4A3C31;
+            border-color: #FFD1DC;
+        }
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Success Icon */
+        .fa-check-circle {
+            color: #FF8A8A;
+            animation: bounce 1s infinite;
+        }
+        @keyframes bounce {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+
+        /* Card */
+        .card {
+            border-radius: 20px;
+            background: #FFF5F5;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            animation: cardFadeIn 0.8s ease forwards;
+            transition: transform 0.4s ease;
+        }
+        .card:hover {
+            transform: translateY(-8px);
+            animation: wiggle 0.3s ease;
+        }
+        .card-body {
+            padding: 30px;
+        }
+        @keyframes cardFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        @keyframes wiggle {
+            0% { transform: translateY(-8px) rotate(0deg); }
+            50% { transform: translateY(-8px) rotate(2deg); }
+            100% { transform: translateY(-8px) rotate(0deg); }
+        }
+
+        /* Buttons */
+        .btn-primary, .btn-outline-primary {
+            background-color: #FF8A8A;
+            border-color: #FF8A8A;
+            border-radius: 10px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        .btn-primary:hover, .btn-outline-primary:hover {
+            background-color: #FF6B6B;
+            border-color: #FF6B6B;
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            animation: buttonWiggle 0.3s ease;
+        }
+        .btn-outline-primary {
+            color: #FF8A8A;
+            background-color: transparent;
+        }
+        @keyframes buttonWiggle {
+            0% { transform: translateY(-3px) scale(1.05) rotate(0deg); }
+            50% { transform: translateY(-3px) scale(1.05) rotate(2deg); }
+            100% { transform: translateY(-3px) scale(1.05) rotate(0deg); }
+        }
+
+        /* Toast Notification */
+        .toast {
+            border-radius: 12px;
+            border: 2px solid #FF8A8A;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+            animation: toastPop 0.5s ease;
+        }
+        .toast-header {
+            background-color: #FFD1DC;
+            color: #4A3C31;
+            border-bottom: none;
+        }
+        .toast-body {
+            background-color: #FFF5F5;
+            color: #4A3C31;
+            font-size: 1rem;
+        }
+        .bg-danger.text-white .toast-header {
+            background-color: #FF6B6B;
+            color: #FFF5F5;
+        }
+        .bg-danger.text-white .toast-body {
+            background-color: #FFE4E1;
+            color: #4A3C31;
+        }
+        @keyframes toastPop {
+            0% { transform: scale(0.8); opacity: 0; }
+            80% { transform: scale(1.05); opacity: 1; }
+            100% { transform: scale(1); }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.2rem;
+            }
+            .card-body {
+                padding: 20px;
+            }
+            .btn-primary, .btn-outline-primary {
+                font-size: 0.95rem;
+            }
+            .container {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+<!-- Navigation -->
+<div th:replace="layout/header :: navbar"></div>
+
+<div class="container py-5">
+    <!-- Page Title -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <h1 class="mb-3 fw-bold text-primary">Thanh toán thành công</h1>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a th:href="@{/}">Trang chủ</a></li>
+                    <li class="breadcrumb-item"><a th:href="@{/orders}">Đơn hàng</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Thanh toán thành công</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+
+    <!-- Success Message -->
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm text-center">
+                <div class="card-body">
+                    <i class="fas fa-check-circle fa-5x mb-4"></i>
+                    <h2 class="card-title mb-4">Thanh toán thành công!</h2>
+                    <p class="text-muted mb-4">
+                        Cảm ơn bạn đã đặt hàng tại Bakery Shop! Đơn hàng của bạn đã được xử lý thành công.
+                        Chúng tôi sẽ gửi thông tin chi tiết qua email và bạn có thể theo dõi trạng thái đơn hàng trong mục "Đơn hàng của tôi".
+                    </p>
+                    <div class="d-flex justify-content-center gap-3">
+                        <a th:href="@{/orders}" class="btn btn-primary">
+                            <i class="fas fa-list me-2"></i>Xem đơn hàng của tôi
+                        </a>
+                        <a th:href="@{/products}" class="btn btn-outline-primary">
+                            <i class="fas fa-shopping-cart me-2"></i>Tiếp tục mua sắm
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Footer -->
+<div th:replace="layout/footer :: footer"></div>
+
+<!-- Toast for Notifications -->
+<div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+    <div id="notificationToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="toast-header">
+            <strong class="me-auto">Thông báo</strong>
+            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="toast-body"></div>
+    </div>
+</div>
+
+<script th:inline="javascript">
+    $(document).ready(function() {
+        const contextPath = /*[[@{/}]]*/ '';
+        const toast = new bootstrap.Toast(document.getElementById('notificationToast'));
+
+        // Page transition on link clicks
+        $('a[href^="/"]').not('[href="#"]').click(function(e) {
+            e.preventDefault();
+            const href = $(this).attr('href');
+            $('body').addClass('page-transition-exit');
+            setTimeout(() => {
+                window.location.href = href;
+            }, 400);
+        });
+
+        // Confetti effect
+        function triggerConfetti() {
+            confetti({
+                particleCount: 100,
+                spread: 70,
+                origin: { y: 0.6 },
+                colors: ['#FF8A8A', '#FFD1DC', '#FFE4E1', '#FFF5F5'],
+                shapes: ['circle', 'square'],
+                scalar: 1.2
+            });
+        }
+
+        // Show success notification with confetti
+        const showNotification = (message, isError = false) => {
+            const toastEl = $('#notificationToast');
+            toastEl.find('.toast-body').text(message);
+            if (isError) {
+                toastEl.addClass('bg-danger text-white');
+            } else {
+                toastEl.removeClass('bg-danger text-white');
+                triggerConfetti();
+            }
+            toast.show();
+        };
+
+        // Trigger confetti and notification on page load
+        triggerConfetti();
+        showNotification('Thanh toán thành công! Cảm ơn bạn đã đặt hàng.');
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${title} ?: 'Chi tiết đơn hàng - Bakery Shop'">Chi tiết đơn hàng - Bakery Shop</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Dancing+Script:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        /* General Styles */
+        body {
+            font-family: 'Playfair Display', serif;
+            background: linear-gradient(to bottom, #FFF5F5, #FFE4E1);
+            color: #4A3C31;
+            margin: 0;
+            min-height: 100vh;
+            animation: pageFadeIn 0.8s ease forwards;
+        }
+
+        @keyframes pageFadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .page-transition-exit {
+            animation: pageFadeOut 0.4s ease forwards;
+        }
+        @keyframes pageFadeOut {
+            from { opacity: 1; transform: translateY(0); }
+            to { opacity: 0; transform: translateY(-20px); }
+        }
+
+        /* Navbar */
+        .navbar {
+            background-color: #FFD1DC;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            animation: slideDown 0.5s ease;
+        }
+        .navbar-brand, .nav-link {
+            color: #4A3C31 !important;
+            font-weight: 600;
+            transition: color 0.3s ease, transform 0.3s ease;
+        }
+        .nav-link:hover {
+            color: #FF6B6B !important;
+            transform: scale(1.05);
+        }
+        @keyframes slideDown {
+            from { transform: translateY(-100%); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        /* Page Title */
+        h1 {
+            font-family: 'Dancing Script', cursive;
+            font-size: 3rem;
+            color: #FF6B6B;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
+            animation: textPop 1.2s ease;
+        }
+        .breadcrumb {
+            background: transparent;
+            margin-bottom: 0;
+        }
+        .breadcrumb-item a {
+            color: #FF8A8A;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        .breadcrumb-item a:hover {
+            color: #FF6B6B;
+        }
+        .breadcrumb-item.active {
+            color: #6B5B4A;
+        }
+        @keyframes textPop {
+            0% { transform: scale(0.8); opacity: 0; }
+            80% { transform: scale(1.05); opacity: 1; }
+            100% { transform: scale(1); }
+        }
+
+        /* Alerts */
+        .alert {
+            border-radius: 10px;
+            animation: fadeInUp 0.5s ease;
+            margin-bottom: 20px;
+        }
+        .alert-success {
+            background-color: #FFE4E1;
+            color: #4A3C31;
+            border-color: #FFD1DC;
+        }
+        .alert-danger {
+            background-color: #FF6B6B;
+            color: #FFF5F5;
+            border-color: #FF8A8A;
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Card */
+        .card {
+            border-radius: 20px;
+            background: #FFF5F5;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            animation: cardFadeIn 0.8s ease forwards;
+            transition: transform 0.4s ease;
+        }
+        .card:hover {
+            transform: translateY(-8px);
+            animation: wiggle 0.3s ease;
+        }
+        .card-body {
+            padding: 30px;
+        }
+        .card-title {
+            font-family: 'Playfair Display', serif;
+            color: #FF8A8A;
+        }
+        @keyframes cardFadeIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes wiggle {
+            0% { transform: translateY(-8px) rotate(0deg); }
+            50% { transform: translateY(-8px) rotate(2deg); }
+            100% { transform: translateY(-8px) rotate(0deg); }
+        }
+
+        /* Table */
+        .table {
+            background: #FFF5F5;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .table-light {
+            background-color: #FFD1DC !important;
+            color: #4A3C31;
+        }
+        .table-hover tbody tr:hover {
+            background-color: #FFE4E1;
+        }
+        .text-dark {
+            color: #4A3C31 !important;
+            transition: color 0.3s ease;
+        }
+        .text-dark:hover {
+            color: #FF6B6B !important;
+        }
+        .text-primary {
+            color: #FF8A8A !important;
+        }
+
+        /* Order Status */
+        .order-status .badge {
+            font-size: 0.875rem;
+            padding: 8px 16px;
+            border-radius: 8px;
+        }
+
+        /* Buttons */
+        .btn-primary, .btn-outline-primary {
+            background-color: #FF8A8A;
+            border-color: #FF8A8A;
+            border-radius: 10px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        .btn-primary:hover, .btn-outline-primary:hover {
+            background-color: #FF6B6B;
+            border-color: #FF6B6B;
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            animation: buttonWiggle 0.3s ease;
+        }
+        .btn-outline-primary {
+            color: #FF8A8A;
+            background-color: transparent;
+        }
+        @keyframes buttonWiggle {
+            0% { transform: translateY(-3px) scale(1.05) rotate(0deg); }
+            50% { transform: translateY(-3px) scale(1.05) rotate(2deg); }
+            100% { transform: translateY(-3px) scale(1.05) rotate(0deg); }
+        }
+
+        /* Toast Notification */
+        .toast {
+            border-radius: 12px;
+            border: 2px solid #FF8A8A;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+            animation: toastPop 0.5s ease;
+        }
+        .toast-header {
+            background-color: #FFD1DC;
+            color: #4A3C31;
+            border-bottom: none;
+        }
+        .toast-body {
+            background-color: #FFF5F5;
+            color: #4A3C31;
+            font-size: 1rem;
+        }
+        .bg-danger.text-white .toast-header {
+            background-color: #FF6B6B;
+            color: #FFF5F5;
+        }
+        .bg-danger.text-white .toast-body {
+            background-color: #FFE4E1;
+            color: #4A3C31;
+        }
+        @keyframes toastPop {
+            0% { transform: scale(0.8); opacity: 0; }
+            80% { transform: scale(1.05); opacity: 1; }
+            100% { transform: scale(1); }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            h1 { font-size: 2.2rem; }
+            .card-body { padding: 20px; }
+            .table { font-size: 0.9rem; }
+            .btn-primary, .btn-outline-primary { font-size: 0.95rem; }
+            .container { padding: 20px; }
+            .order-status .badge { font-size: 0.75rem; padding: 6px 12px; }
+        }
+    </style>
+</head>
+<body>
+<!-- Navigation -->
+<div th:replace="~{layout/header :: navbar}"></div>
+
+<div class="container py-5">
+    <!-- Page Title -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <h1 class="mb-3 fw-bold text-primary">Chi tiết đơn hàng #<span th:text="${order.id}">123</span></h1>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a th:href="@{/}">Trang chủ</a></li>
+                    <li class="breadcrumb-item"><a th:href="@{/orders}">Đơn hàng</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Chi tiết đơn hàng</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+
+    <!-- Alert Messages -->
+    <div th:if="${success}" class="alert alert-success" role="alert">
+        <i class="fas fa-check-circle me-2"></i>
+        <span th:text="${success}">Success message</span>
+    </div>
+    <div th:if="${error}" class="alert alert-danger" role="alert">
+        <i class="fas fa-exclamation-circle me-2"></i>
+        <span th:text="${error}">Error message</span>
+    </div>
+
+    <div class="row g-4">
+        <!-- Order Information -->
+        <div class="col-lg-8">
+            <!-- Order Status -->
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-body">
+                    <h5 class="card-title mb-4 fw-bold text-primary">Trạng thái đơn hàng</h5>
+                    <div class="order-status d-flex justify-content-between align-items-center flex-wrap">
+                        <span class="badge px-3 py-2 fs-6"
+                              th:classappend="${order.status == T(com.bakeryshop.entity.Order.OrderStatus).PENDING ? 'bg-warning' : (order.status == T(com.bakeryshop.entity.Order.OrderStatus).CONFIRMED ? 'bg-info' : (order.status == T(com.bakeryshop.entity.Order.OrderStatus).SHIPPING ? 'bg-primary' : (order.status == T(com.bakeryshop.entity.Order.OrderStatus).DELIVERED ? 'bg-success' : (order.status == T(com.bakeryshop.entity.Order.OrderStatus).CANCELLED ? 'bg-danger' : 'bg-secondary'))))}"
+                              th:text="${order.status == T(com.bakeryshop.entity.Order.OrderStatus).PENDING ? 'Chờ xác nhận' : (order.status == T(com.bakeryshop.entity.Order.OrderStatus).CONFIRMED ? 'Đã xác nhận' : (order.status == T(com.bakeryshop.entity.Order.OrderStatus).SHIPPING ? 'Đang giao' : (order.status == T(com.bakeryshop.entity.Order.OrderStatus).DELIVERED ? 'Đã giao' : (order.status == T(com.bakeryshop.entity.Order.OrderStatus).CANCELLED ? 'Đã huỷ' : 'Không xác định'))))}">
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Order Items -->
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-body">
+                    <h5 class="card-title mb-4 fw-bold text-primary">Sản phẩm</h5>
+                    <div class="table-responsive">
+                        <table class="table align-middle table-hover">
+                            <thead class="table-light">
+                            <tr>
+                                <th>Sản phẩm</th>
+                                <th class="text-center">Số lượng</th>
+                                <th class="text-end">Đơn giá</th>
+                                <th class="text-end">Thành tiền</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="item : ${order.orderItems}">
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <img th:src="@{'/uploads/' + ${item.productImage}}" class="img-fluid rounded shadow-sm border" style="width: 64px; height: 64px; object-fit: cover;" th:alt="${item.productName}">
+                                        <div class="ms-3">
+                                            <h6 class="mb-0 fw-bold">
+                                                <a th:href="@{/products/{id}(id=${item.productId})}" class="text-decoration-none text-dark" th:text="${item.productName}">Product name</a>
+                                            </h6>
+                                            <small class="text-muted" th:text="${item.productCategoryName}">Category</small>
+                                        </div>
+                                </td>
+                                <td class="text-center" th:text="${item.quantity}">1</td>
+                                <td class="text-end">
+                                    <span class="fw-bold text-primary" th:text="${#numbers.formatDecimal(item.price, 0, 'COMMA', 0, 'POINT')}">0</span>đ
+                                </td>
+                                <td class="text-end">
+                                    <span class="fw-bold" th:text="${#numbers.formatDecimal(item.subTotal, 0, 'COMMA', 0, 'POINT')}">0</span>đ
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Order Summary -->
+        <div class="col-lg-4">
+            <!-- Payment Information -->
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-body">
+                    <h5 class="card-title mb-4 fw-bold text-primary">Thanh toán</h5>
+                    <div class="mb-3">
+                        <p class="mb-2">Phương thức thanh toán:</p>
+                        <div class="d-flex align-items-center">
+                            <i th:class="${'fas fa-2x me-2 ' + (order.paymentMethod == T(com.bakeryshop.entity.Order.PaymentMethod).COD ? 'fa-money-bill text-success' : (order.paymentMethod == T(com.bakeryshop.entity.Order.PaymentMethod).VNPAY ? 'fa-credit-card text-primary' : 'fa-question text-muted'))}"></i>
+                            <span th:text="${order.paymentMethod == T(com.bakeryshop.entity.Order.PaymentMethod).COD ? 'Thanh toán khi nhận hàng' : (order.paymentMethod == T(com.bakeryshop.entity.Order.PaymentMethod).VNPAY ? 'Thanh toán qua VNPAY' : 'Không xác định')}"></span>
+                        </div>
+                    </div>
+                    <div>
+                        <p class="mb-2">Trạng thái thanh toán:</p>
+                        <span th:class="${'badge px-3 py-2 fs-6 ' + (order.paymentStatus == T(com.bakeryshop.entity.Order.PaymentStatus).PENDING ? 'bg-warning' : (order.paymentStatus == T(com.bakeryshop.entity.Order.PaymentStatus).PAID ? 'bg-success' : (order.paymentStatus == T(com.bakeryshop.entity.Order.PaymentStatus).FAILED ? 'bg-danger' : 'bg-secondary')))}"
+                              th:text="${order.paymentStatus == T(com.bakeryshop.entity.Order.PaymentStatus).PENDING ? 'Chưa thanh toán' : (order.paymentStatus == T(com.bakeryshop.entity.Order.PaymentStatus).PAID ? 'Đã thanh toán' : (order.paymentStatus == T(com.bakeryshop.entity.Order.PaymentStatus).FAILED ? 'Thanh toán thất bại' : 'Không xác định'))}">
+                            </span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Shipping Information -->
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-body">
+                    <h5 class="card-title mb-4 fw-bold text-primary">Thông tin giao hàng</h5>
+                    <p class="mb-2"><strong>Người nhận:</strong><br><span th:text="${order.shippingName} ?: 'N/A'">John Doe</span></p>
+                    <p class="mb-2"><strong>Số điện thoại:</strong><br><span th:text="${order.shippingPhone} ?: 'N/A'">0123456789</span></p>
+                    <p class="mb-0"><strong>Địa chỉ:</strong><br><span th:text="${order.shippingAddress} ?: 'N/A'">123 Street, City</span></p>
+                </div>
+            </div>
+
+            <!-- Order Total -->
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title mb-4 fw-bold text-primary">Tổng đơn hàng</h5>
+                    <div class="d-flex justify-content-between mb-3">
+                        <span>Tạm tính:</span>
+                        <span class="fw-bold" th:text="${order.totalAmount != null} ? ${#numbers.formatDecimal(order.totalAmount, 0, 'COMMA', 0, 'POINT')} + ' đ' : '0 đ'">0 đ</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-3">
+                        <span>Phí vận chuyển:</span>
+                        <span class="text-success">Miễn phí</span>
+                    </div>
+                    <hr>
+                    <div class="d-flex justify-content-between">
+                        <strong>Tổng cộng:</strong>
+                        <strong class="text-primary fs-5" th:text="${order.totalAmount != null} ? ${#numbers.formatDecimal(order.totalAmount, 0, 'COMMA', 0, 'POINT')} + ' đ' : '0 đ'">0 đ</strong>
+                    </div>
+                    <div class="mt-4">
+                        <a th:href="@{/orders}" class="btn btn-primary w-100 mb-2">
+                            <i class="fas fa-list me-2"></i>Xem đơn hàng của tôi
+                        </a>
+                        <a th:href="@{/products}" class="btn btn-outline-primary w-100">
+                            <i class="fas fa-shopping-cart me-2"></i>Tiếp tục mua sắm
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Footer -->
+<div th:replace="~{layout/footer :: footer}"></div>
+
+<!-- Toast for Notifications -->
+<div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+    <div id="notificationToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="toast-header">
+            <strong class="me-auto">Thông báo</strong>
+            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="toast-body"></div>
+    </div>
+</div>
+
+<!--<script th:inline="javascript">-->
+<!--        $(document).ready(function() {-->
+<!--            const contextPath = /*[[@{/}]]*/ '';-->
+<!--            const toast = new bootstrap.Toast(document.getElementById('notificationToast'));-->
+
+<!--            // Page transition on link clicks-->
+<!--            $('a[href^="/"]').not('[href="#"]').click(function(e) {-->
+<!--                e.preventDefault();-->
+<!--                const href = $(this).attr('href');-->
+<!--                $('body').addClass('page-transition-exit');-->
+<!--                setTimeout(() => {-->
+<!--                    window.location.href = href;-->
+<!--                }, 400);-->
+<!--            });-->
+
+<!--            // Confetti effect-->
+<!--            function triggerConfetti() {-->
+<!--                confetti({-->
+<!--                    particleCount: 100,-->
+<!--                    spread: 70,-->
+<!--                    origin: { y: 0.6 },-->
+<!--                    colors: ['#FF8A8A', '#FFD1DC', '#FFE4E1', '#FFF5F5'],-->
+<!--                    shapes: ['circle', 'square'],-->
+<!--                    scalar: 1.2-->
+<!--                });-->
+<!--            }-->
+
+<!--            // Notification function-->
+<!--            const showNotification = (message, isError = false) => {-->
+<!--                const toastEl = $('#notificationToast');-->
+<!--                toastEl.find('.toast-body').text(message);-->
+<!--                if (isError) {-->
+<!--                    toastEl.addClass('bg-danger text-white');-->
+<!--                } else {-->
+<!--                    toastEl.removeClass('bg-danger text-white');-->
+<!--                    triggerConfetti();-->
+<!--                }-->
+<!--                toast.show();-->
+<!--            };-->
+
+<!--            // Show success notification if present-->
+<!--            const successMessage = /*[[${success}]]*/ null;-->
+<!--            if (successMessage) {-->
+<!--                showNotification(successMessage);-->
+<!--            }-->
+
+<!--            // Show error notification if present-->
+<!--            const errorMessage = /*[[${error}]]*/ null;-->
+<!--            if (errorMessage) {-->
+<!--                showNotification(errorMessage, true);-->
+<!--            }-->
+<!--        });-->
+<!--    </script>-->
+</body>
+</html>

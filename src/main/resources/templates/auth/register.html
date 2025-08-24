@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${title}">Bakery Shop - Đăng ký</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Dancing+Script:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        /* General Styles */
+        body {
+            font-family: 'Playfair Display', serif;
+            background: url('/images/slider2.jpg') center center/cover no-repeat fixed;
+            color: #4A3C31;
+            margin: 0;
+            min-height: 100vh;
+            position: relative;
+            animation: pageFadeIn 0.8s ease forwards;
+        }
+        .overlay {
+            background: rgba(255, 255, 255, 0.75); /* Nền mờ trắng */
+            min-height: 100vh;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            z-index: 0;
+        }
+
+        /* Page Transition */
+        @keyframes pageFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .page-transition-exit {
+            animation: pageFadeOut 0.4s ease forwards;
+        }
+        @keyframes pageFadeOut {
+            from {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            to {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+        }
+
+        /* Navbar */
+        .navbar {
+            background-color: #FFD1DC; /* Hồng phấn pastel */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            animation: slideDown 0.5s ease;
+        }
+        .navbar-brand, .nav-link {
+            color: #4A3C31 !important;
+            font-weight: 600;
+            transition: color 0.3s ease, transform 0.3s ease;
+        }
+        .nav-link:hover {
+            color: #FF6B6B !important;
+            transform: scale(1.05);
+        }
+        @keyframes slideDown {
+            from {
+                transform: translateY(-100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        /* Registration Card */
+        .card {
+            border-radius: 20px;
+            background: rgba(255, 245, 245, 0.95); /* Nền hồng nhạt mờ */
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            animation: cardFadeIn 1s ease forwards;
+            overflow: hidden;
+            transition: transform 0.4s ease;
+        }
+        .card:hover {
+            transform: translateY(-8px);
+            animation: wiggle 0.3s ease;
+        }
+        .card-body {
+            padding: 40px;
+        }
+        .text-primary {
+            color: #FF8A8A !important; /* Hồng pastel */
+        }
+        h2 {
+            font-family: 'Dancing Script', cursive;
+            font-size: 2.8rem;
+            color: #FF6B6B;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
+            animation: textPop 1.2s ease;
+        }
+        p.text-muted {
+            color: #6B5B4A !important;
+        }
+        @keyframes cardFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        @keyframes wiggle {
+            0% { transform: translateY(-8px) rotate(0deg); }
+            50% { transform: translateY(-8px) rotate(2deg); }
+            100% { transform: translateY(-8px) rotate(0deg); }
+        }
+        @keyframes textPop {
+            0% {
+                transform: scale(0.8);
+                opacity: 0;
+            }
+            80% {
+                transform: scale(1.05);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        /* Form Elements */
+        .input-group-text {
+            background: #FFF5F5;
+            border-color: #FFD1DC;
+            color: #FF8A8A;
+            transition: all 0.3s ease;
+        }
+        .form-control, textarea.form-control {
+            border-color: #FFD1DC;
+            background: #FFF5F5;
+            color: #4A3C31;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+        .form-control:focus, textarea.form-control:focus {
+            border-color: #FF8A8A;
+            box-shadow: 0 0 8px rgba(255, 138, 138, 0.3);
+            transform: scale(1.02);
+            background: #FFF5F5;
+            color: #4A3C31;
+        }
+        .form-control::placeholder, textarea.form-control::placeholder {
+            color: #6B5B4A;
+            opacity: 0.7;
+        }
+        .form-check-input {
+            border-color: #FFD1DC;
+            background-color: #FFF5F5;
+        }
+        .form-check-input:checked {
+            background-color: #FF8A8A;
+            border-color: #FF8A8A;
+        }
+        .form-check-label {
+            color: #6B5B4A;
+        }
+        .btn-primary {
+            background-color: #FF8A8A;
+            border-color: #FF8A8A;
+            border-radius: 10px;
+            padding: 12px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+        }
+        .btn-primary:hover {
+            background-color: #FF6B6B;
+            border-color: #FF6B6B;
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            animation: buttonWiggle 0.3s ease;
+        }
+        @keyframes buttonWiggle {
+            0% { transform: translateY(-3px) scale(1.05) rotate(0deg); }
+            50% { transform: translateY(-3px) scale(1.05) rotate(2deg); }
+            100% { transform: translateY(-3px) scale(1.05) rotate(0deg); }
+        }
+
+        /* Alerts */
+        .alert {
+            border-radius: 10px;
+            animation: fadeInUp 0.5s ease;
+            margin-bottom: 20px;
+        }
+        .alert-success {
+            background-color: #FFE4E1;
+            color: #4A3C31;
+            border-color: #FFD1DC;
+        }
+        .alert-danger {
+            background-color: #FF6B6B;
+            color: #FFF5F5;
+            border-color: #FF8A8A;
+        }
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Links */
+        a.text-primary, .form-check-label a {
+            color: #FF8A8A !important;
+            transition: color 0.3s ease, transform 0.3s ease;
+        }
+        a.text-primary:hover, .form-check-label a:hover {
+            color: #FF6B6B !important;
+            transform: scale(1.05);
+        }
+
+        /* Logo */
+        img.mb-2 {
+            transition: transform 0.3s ease;
+        }
+        img.mb-2:hover {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        /* Invalid Feedback */
+        .invalid-feedback {
+            color: #FF6B6B;
+            font-size: 0.85rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .card-body {
+                padding: 20px;
+            }
+            h2 {
+                font-size: 2.2rem;
+            }
+            .form-control, .btn-primary, textarea.form-control {
+                font-size: 0.95rem;
+            }
+            .input-group-text {
+                padding: 8px;
+            }
+            .container {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="overlay"></div>
+<!-- Navigation -->
+<div th:replace="layout/header :: navbar"></div>
+<div class="container py-5 position-relative">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-5">
+            <div class="card shadow-lg border-0 rounded-4">
+                <div class="card-body p-5">
+                    <div class="text-center mb-4">
+                        <div class="mb-3">
+                            <img th:src="@{/images/logo.png}" alt="Bakery Shop Logo" height="48" class="mb-2">
+                        </div>
+                        <h2 class="mb-2 fw-bold text-primary">Đăng ký tài khoản</h2>
+                        <p class="text-muted">Tạo tài khoản để mua sắm dễ dàng hơn</p>
+                    </div>
+                    <!-- Alert Messages -->
+                    <div th:if="${param.error}" class="alert alert-danger" role="alert">
+                        <span th:text="${param.error}">Error message</span>
+                    </div>
+                    <div th:if="${param.success}" class="alert alert-success" role="alert">
+                        Đăng ký thành công! Vui lòng kiểm tra email để xác thực tài khoản.
+                    </div>
+                    <!-- Registration Form -->
+                    <form th:action="@{/auth/register}" method="post" th:object="${signUpRequest}" autocomplete="on">
+                        <div class="mb-3 input-group">
+                            <span class="input-group-text bg-white border-end-0"><i class="fas fa-user text-primary"></i></span>
+                            <input type="text" class="form-control border-start-0" id="name" th:field="*{name}" placeholder="Họ và tên" required minlength="3" maxlength="50">
+                            <div class="invalid-feedback" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Name error</div>
+                        </div>
+                        <div class="mb-3 input-group">
+                            <span class="input-group-text bg-white border-end-0"><i class="fas fa-envelope text-primary"></i></span>
+                            <input type="email" class="form-control border-start-0" id="email" th:field="*{email}" placeholder="Email" required>
+                            <div class="invalid-feedback" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Email error</div>
+                        </div>
+                        <div class="mb-3 input-group">
+                            <span class="input-group-text bg-white border-end-0"><i class="fas fa-phone text-primary"></i></span>
+                            <input type="tel" class="form-control border-start-0" id="phone" th:field="*{phone}" placeholder="Số điện thoại" required pattern="[0-9]{10}">
+                            <div class="invalid-feedback" th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}">Phone error</div>
+                        </div>
+                        <div class="mb-3 input-group">
+                            <span class="input-group-text bg-white border-end-0"><i class="fas fa-map-marker-alt text-primary"></i></span>
+                            <textarea class="form-control border-start-0" id="address" th:field="*{address}" rows="2" placeholder="Địa chỉ"></textarea>
+                        </div>
+                        <div class="mb-3 input-group">
+                            <span class="input-group-text bg-white border-end-0"><i class="fas fa-lock text-primary"></i></span>
+                            <input type="password" class="form-control border-start-0" id="password" th:field="*{password}" placeholder="Mật khẩu" required minlength="6">
+                            <div class="invalid-feedback" th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Password error</div>
+                        </div>
+                        <div class="mb-3 input-group">
+                            <span class="input-group-text bg-white border-end-0"><i class="fas fa-lock text-primary"></i></span>
+                            <input type="password" class="form-control border-start-0" id="confirmPassword" name="confirmPassword" placeholder="Xác nhận mật khẩu" required>
+                            <div class="invalid-feedback">Mật khẩu xác nhận không khớp</div>
+                        </div>
+                        <div class="mb-3 form-check d-flex align-items-center">
+                            <input type="checkbox" class="form-check-input" id="terms" name="terms" required>
+                            <label class="form-check-label ms-2" for="terms">Tôi đồng ý với <a href="#" class="text-decoration-none">điều khoản</a> và <a href="#" class="text-decoration-none">chính sách bảo mật</a></label>
+                        </div>
+                        <div class="d-grid mb-2">
+                            <button type="submit" class="btn btn-primary btn-lg fw-bold">Đăng ký</button>
+                        </div>
+                    </form>
+                    <!-- Additional Links -->
+                    <div class="text-center mt-4">
+                        <p class="mb-0">Đã có tài khoản? <a th:href="@{/auth/login}" class="text-decoration-none text-primary fw-semibold">Đăng nhập ngay</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Footer -->
+<div th:replace="layout/footer :: footer"></div>
+
+<!-- JavaScript for Page Transition, Password Validation, and Confetti -->
+<script th:inline="javascript">
+        $(document).ready(function() {
+            const contextPath = /*[[@{/}]]*/ '';
+
+            // Page transition on link clicks
+            $('a[href^="/"]').not('[href="#"]').click(function(e) {
+                e.preventDefault();
+                const href = $(this).attr('href');
+                $('body').addClass('page-transition-exit');
+                setTimeout(() => {
+                    window.location.href = href;
+                }, 400);
+            });
+
+            // Confetti effect
+            function triggerConfetti() {
+                confetti({
+                    particleCount: 100,
+                    spread: 70,
+                    origin: { y: 0.6 },
+                    colors: ['#FF8A8A', '#FFD1DC', '#FFE4E1', '#FFF5F5'],
+                    shapes: ['circle', 'square'],
+                    scalar: 1.2
+                });
+            }
+
+            // Trigger confetti on successful registration (based on param.success)
+            if (/*[[${param.success}]]*/ false) {
+                triggerConfetti();
+            }
+
+            // Password validation
+            $('#confirmPassword').on('input', function() {
+                const password = $('#password').val();
+                const confirmPassword = $(this).val();
+                if (password !== confirmPassword) {
+                    $(this).get(0).setCustomValidity('Mật khẩu xác nhận không khớp');
+                    $(this).siblings('.invalid-feedback').show();
+                } else {
+                    $(this).get(0).setCustomValidity('');
+                    $(this).siblings('.invalid-feedback').hide();
+                }
+            });
+
+            // Optional: AJAX form submission
+            $('form').on('submit', function(e) {
+                // Uncomment for AJAX submission
+                // e.preventDefault();
+                // $.ajax({
+                //     url: contextPath + '/auth/register',
+                //     method: 'POST',
+                //     data: $(this).serialize(),
+                //     success: function(response) {
+                //         triggerConfetti();
+                //         setTimeout(() => window.location.href = contextPath + '/auth/login?registered', 1000);
+                //     },
+                //     error: function(xhr) {
+                //         window.location.href = contextPath + '/auth/register?error=' + encodeURIComponent(xhr.responseJSON?.message || 'Có lỗi xảy ra');
+                //     }
+                // });
+            });
+        });
+    </script>
+</body>
+</html>

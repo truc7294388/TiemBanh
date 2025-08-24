@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${title}">Bakery Shop - Thanh toán</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Dancing+Script:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        /* General Styles */
+        body {
+            font-family: 'Playfair Display', serif;
+            background: linear-gradient(to bottom, #FFF5F5, #FFE4E1); /* Gradient pastel hồng nhạt */
+            color: #4A3C31;
+            margin: 0;
+            min-height: 100vh;
+            animation: pageFadeIn 0.8s ease forwards;
+        }
+
+        /* Page Transition */
+        @keyframes pageFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .page-transition-exit {
+            animation: pageFadeOut 0.4s ease forwards;
+        }
+        @keyframes pageFadeOut {
+            from {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            to {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+        }
+
+        /* Navbar */
+        .navbar {
+            background-color: #FFD1DC; /* Hồng phấn pastel */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            animation: slideDown 0.5s ease;
+        }
+        .navbar-brand, .nav-link {
+            color: #4A3C31 !important;
+            font-weight: 600;
+            transition: color 0.3s ease, transform 0.3s ease;
+        }
+        .nav-link:hover {
+            color: #FF6B6B !important;
+            transform: scale(1.05);
+        }
+        @keyframes slideDown {
+            from {
+                transform: translateY(-100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        /* Page Title */
+        h1 {
+            font-family: 'Dancing Script', cursive;
+            font-size: 3rem;
+            color: #FF6B6B;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
+            animation: textPop 1.2s ease;
+        }
+        @keyframes textPop {
+            0% {
+                transform: scale(0.8);
+                opacity: 0;
+            }
+            80% {
+                transform: scale(1.05);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        /* Alerts */
+        .alert {
+            border-radius: 10px;
+            animation: fadeInUp 0.5s ease;
+            margin-bottom: 20px;
+        }
+        .alert-success {
+            background-color: #FFE4E1;
+            color: #4A3C31;
+            border-color: #FFD1DC;
+        }
+        .alert-danger {
+            background-color: #FF6B6B;
+            color: #FFF5F5;
+            border-color: #FF8A8A;
+        }
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Cards */
+        .card {
+            border-radius: 20px;
+            background: #FFF5F5;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            animation: cardFadeIn 0.8s ease forwards;
+            transition: transform 0.4s ease;
+        }
+        .card:hover {
+            transform: translateY(-8px);
+            animation: wiggle 0.3s ease;
+        }
+        .card-title {
+            font-family: 'Dancing Script', cursive;
+            font-size: 1.8rem;
+            color: #FF6B6B;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        @keyframes cardFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        @keyframes wiggle {
+            0% { transform: translateY(-8px) rotate(0deg); }
+            50% { transform: translateY(-8px) rotate(2deg); }
+            100% { transform: translateY(-8px) rotate(0deg); }
+        }
+
+        /* Form Inputs */
+        .form-control, .form-check-input {
+            border-color: #FFD1DC;
+            background: #FFF5F5;
+            color: #4A3C31;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+        .form-control:focus, .form-check-input:focus {
+            border-color: #FF8A8A;
+            box-shadow: 0 0 8px rgba(255, 138, 138, 0.3);
+            transform: scale(1.02);
+            background: #FFF5F5;
+        }
+        .form-control::placeholder {
+            color: #6B5B4A;
+            opacity: 0.7;
+        }
+        .form-label {
+            color: #6B5B4A;
+            font-weight: 600;
+        }
+        .form-check-label {
+            color: #4A3C31;
+            transition: color 0.3s ease;
+        }
+        .form-check-input:checked {
+            background-color: #FF8A8A;
+            border-color: #FF8A8A;
+        }
+        .form-check-input:hover {
+            cursor: pointer;
+            transform: scale(1.1);
+        }
+
+        /* Buttons */
+        .btn-primary {
+            background-color: #FF8A8A;
+            border-color: #FF8A8A;
+            border-radius: 10px;
+            font-weight: 600;
+            padding: 12px;
+            transition: all 0.3s ease;
+        }
+        .btn-primary:hover {
+            background-color: #FF6B6B;
+            border-color: #FF6B6B;
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            animation: buttonWiggle 0.3s ease;
+        }
+        @keyframes buttonWiggle {
+            0% { transform: translateY(-3px) scale(1.05) rotate(0deg); }
+            50% { transform: translateY(-3px) scale(1.05) rotate(2deg); }
+            100% { transform: translateY(-3px) scale(1.05) rotate(0deg); }
+        }
+
+        /* Order Summary */
+        .text-primary {
+            color: #FF8A8A !important;
+        }
+        .text-success {
+            color: #28A745 !important;
+        }
+        hr {
+            border-color: #FFD1DC;
+        }
+        .text-muted {
+            color: #6B5B4A !important;
+        }
+        .text-decoration-none {
+            color: #FF8A8A;
+            transition: color 0.3s ease;
+        }
+        .text-decoration-none:hover {
+            color: #FF6B6B;
+        }
+
+        /* Toast Notification */
+        .toast {
+            border-radius: 12px;
+            border: 2px solid #FF8A8A;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+            animation: toastPop 0.5s ease;
+        }
+        .toast-header {
+            background-color: #FFD1DC;
+            color: #4A3C31;
+            border-bottom: none;
+        }
+        .toast-body {
+            background-color: #FFF5F5;
+            color: #4A3C31;
+            font-size: 1rem;
+        }
+        .bg-danger.text-white .toast-header {
+            background-color: #FF6B6B;
+            color: #FFF5F5;
+        }
+        .bg-danger.text-white .toast-body {
+            background-color: #FFE4E1;
+            color: #4A3C31;
+        }
+        @keyframes toastPop {
+            0% { transform: scale(0.8); opacity: 0; }
+            80% { transform: scale(1.05); opacity: 1; }
+            100% { transform: scale(1); }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.2rem;
+            }
+            .card-body {
+                padding: 20px;
+            }
+            .form-control, .btn-primary {
+                font-size: 0.95rem;
+            }
+            .container {
+                padding: 20px;
+            }
+            .card-title {
+                font-size: 1.6rem;
+            }
+            .fs-5 {
+                font-size: 1.2rem !important;
+            }
+        }
+    </style>
+</head>
+<body>
+<!-- Navigation -->
+<div th:replace="layout/header :: navbar"></div>
+
+<div class="container py-5">
+    <h1 class="mb-4 fw-bold text-primary">Thanh toán</h1>
+    <!-- Alert Messages -->
+    <div th:if="${success}" class="alert alert-success" role="alert">
+        <span th:text="${success}">Success message</span>
+    </div>
+    <div th:if="${error}" class="alert alert-danger" role="alert">
+        <span th:text="${error}">Error message</span>
+    </div>
+    <!-- Checkout Form -->
+    <form th:action="@{/checkout}" method="post" id="checkoutForm">
+        <div class="row g-4">
+            <!-- Shipping Information -->
+            <div class="col-lg-8">
+                <div class="card border-0 shadow-sm mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title mb-4 fw-bold text-primary">Thông tin giao hàng</h5>
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Họ và tên</label>
+                            <input type="text" class="form-control" id="name" name="name" th:value="${user.name}" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="email" name="email" th:value="${user.email}" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="phone" class="form-label">Số điện thoại</label>
+                            <input type="tel" class="form-control" id="phone" name="phone" th:value="${user.phone}" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Địa chỉ</label>
+
+                            <!-- Địa chỉ chi tiết -->
+                            <input type="text" class="form-control mb-2" id="specificAddress" placeholder="Số nhà, đường..." required>
+
+                            <!-- Tỉnh/Thành phố -->
+                            <select id="province" class="form-control mb-2" onchange="loadDistricts()" required>
+                                <option value="">Chọn tỉnh/thành phố</option>
+                            </select>
+
+                            <!-- Quận/Huyện -->
+                            <select id="district" class="form-control mb-2" onchange="loadWards()" required>
+                                <option value="">Chọn quận/huyện</option>
+                            </select>
+
+                            <!-- Phường/Xã -->
+                            <select id="ward" class="form-control mb-2" required>
+                                <option value="">Chọn phường/xã</option>
+                            </select>
+
+                            <!-- Hidden input để submit -->
+                            <input type="hidden" name="address" id="address" th:value="${user.address}">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="note" class="form-label">Ghi chú</label>
+                            <textarea class="form-control" id="note" name="note" rows="3"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <!-- Payment Method -->
+                <div class="card border-0 shadow-sm mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title mb-4 fw-bold text-primary">Phương thức thanh toán</h5>
+                        <div class="form-check mb-3">
+                            <input class="form-check-input" type="radio" name="paymentMethod" id="cod" value="COD" checked>
+                            <label class="form-check-label" for="cod"><i class="fas fa-money-bill-wave me-2"></i>Thanh toán khi nhận hàng (COD)</label>
+                        </div>
+                        <div class="form-check mb-3">
+                            <input class="form-check-input" type="radio" name="paymentMethod" id="vnpay" value="VNPAY">
+                            <label class="form-check-label" for="vnpay"><i class="fas fa-credit-card me-2"></i>Thanh toán qua VNPay</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Order Summary -->
+            <div class="col-lg-4">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title mb-4 fw-bold text-primary">Đơn hàng của bạn</h5>
+                        <!-- Order Items -->
+                        <div class="mb-4">
+                            <div th:each="item : ${cartItems}" class="d-flex justify-content-between mb-3">
+                                <div>
+                                    <span class="fw-bold" th:text="${item.productName}">Product name</span>
+                                    <small class="text-muted d-block">Số lượng: <span th:text="${item.quantity}">1</span></small>
+                                </div>
+                                <span class="text-end fw-bold text-primary" th:text="${#numbers.formatDecimal(item.subTotal, 0, 'COMMA', 0, 'POINT')} + ' đ'">0 đ</span>
+                            </div>
+                        </div>
+                        <hr>
+                        <!-- Order Total -->
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between mb-2">
+                                <span>Tạm tính:</span>
+                                <span class="fw-bold" th:text="${#numbers.formatDecimal(totalAmount, 0, 'COMMA', 0, 'POINT')} + ' đ'">0 đ</span>
+                            </div>
+                            <div class="d-flex justify-content-between mb-2">
+                                <span>Phí vận chuyển:</span>
+                                <span class="text-success">Miễn phí</span>
+                            </div>
+                            <div class="d-flex justify-content-between">
+                                <span class="fw-bold">Tổng cộng:</span>
+                                <span class="text-primary fw-bold fs-5" th:text="${#numbers.formatDecimal(totalAmount, 0, 'COMMA', 0, 'POINT')} + ' đ'">0 đ</span>
+                            </div>
+                        </div>
+                        <hr>
+                        <!-- Terms -->
+                        <div class="mb-4">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="terms" required>
+                                <label class="form-check-label" for="terms">Tôi đồng ý với <a href="#" class="text-decoration-none">điều khoản</a> và <a href="#" class="text-decoration-none">chính sách</a> của Bakery Shop</label>
+                            </div>
+                        </div>
+                        <!-- Place Order Button -->
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary btn-lg"><i class="fas fa-lock me-2"></i>Đặt hàng</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<!-- Footer -->
+<div th:replace="layout/footer :: footer"></div>
+
+<!-- Toast for Notifications -->
+<div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+    <div id="notificationToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="toast-header">
+            <strong class="me-auto">Thông báo</strong>
+            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="toast-body"></div>
+    </div>
+</div>
+
+<!-- Checkout Scripts -->
+<script th:inline="javascript">
+         $(document).ready(function() {
+                    // Toggle bank info
+                    $('input[name="paymentMethod"]').change(function() {
+                        if ($(this).val() === 'BANK_TRANSFER') {
+                            $('#bankInfo').slideDown();
+                        } else {
+                            $('#bankInfo').slideUp();
+                        }
+                    });
+                });
+// Lấy danh sách tỉnh/thành phố
+fetch("https://provinces.open-api.vn/api/p/")
+  .then((res) => res.json())
+  .then((data) => {
+    const provinceSelect = document.getElementById("province");
+    data.forEach((province) => {
+      const option = document.createElement("option");
+      option.value = province.code;
+      option.textContent = province.name;
+      provinceSelect.appendChild(option);
+    });
+  });
+
+// Load quận/huyện khi chọn tỉnh
+function loadDistricts() {
+  const provinceCode = document.getElementById("province").value;
+  const districtSelect = document.getElementById("district");
+  districtSelect.innerHTML = '<option value="">Chọn quận/huyện</option>';
+  document.getElementById("ward").innerHTML = '<option value="">Chọn phường/xã</option>';
+
+  if (provinceCode) {
+    fetch(`https://provinces.open-api.vn/api/p/${provinceCode}?depth=2`)
+      .then((res) => res.json())
+      .then((data) => {
+        data.districts.forEach((district) => {
+          const option = document.createElement("option");
+          option.value = district.code;
+          option.textContent = district.name;
+          districtSelect.appendChild(option);
+        });
+      });
+  }
+}
+
+// Load phường/xã khi chọn huyện
+function loadWards() {
+  const districtCode = document.getElementById("district").value;
+  const wardSelect = document.getElementById("ward");
+  wardSelect.innerHTML = '<option value="">Chọn phường/xã</option>';
+
+  if (districtCode) {
+    fetch(`https://provinces.open-api.vn/api/d/${districtCode}?depth=2`)
+      .then((res) => res.json())
+      .then((data) => {
+        data.wards.forEach((ward) => {
+          const option = document.createElement("option");
+          option.value = ward.code;
+          option.textContent = ward.name;
+          wardSelect.appendChild(option);
+        });
+      });
+  }
+}
+
+// Ghép địa chỉ khi submit form
+document.getElementById("checkoutForm").addEventListener("submit", function (e) {
+  const specific = document.getElementById("specificAddress").value.trim();
+  const province = document.getElementById("province").selectedOptions[0]?.text || "";
+  const district = document.getElementById("district").selectedOptions[0]?.text || "";
+  const ward = document.getElementById("ward").selectedOptions[0]?.text || "";
+
+  if (!specific || !province || !district || !ward) {
+    alert("Vui lòng nhập đầy đủ địa chỉ!");
+    e.preventDefault();
+    return;
+  }
+
+  document.getElementById("address").value = `${specific}, ${ward}, ${district}, ${province}`;
+});
+    </script>
+</body>
+</html>

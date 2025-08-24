@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Đơn hàng đã bị hủy</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .header {
+            text-align: center;
+            padding: 20px 0;
+            background-color: #FFB6C1;
+            color: white;
+            border-radius: 5px;
+        }
+        .content {
+            padding: 20px 0;
+        }
+        .order-details {
+            background-color: #f9f9f9;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        .footer {
+            text-align: center;
+            padding: 20px 0;
+            font-size: 0.9em;
+            color: #666;
+        }
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #FF69B4;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Đơn hàng đã bị hủy</h1>
+        </div>
+        
+        <div class="content">
+            <p>Xin chào <span th:text="${user.fullName}">User</span>,</p>
+            
+            <p>Đơn hàng #<span th:text="${order.id}">123</span> của bạn đã bị hủy.</p>
+            
+            <div class="order-details">
+                <h3>Chi tiết đơn hàng:</h3>
+                <p>Mã đơn hàng: #<span th:text="${order.id}">123</span></p>
+                <p>Ngày đặt: <span th:text="${#temporals.format(order.createdAt, 'dd/MM/yyyy HH:mm')}">01/01/2024</span></p>
+                <p>Tổng tiền: <span th:text="${#numbers.formatDecimal(order.totalAmount, 0, 'COMMA', 0, 'POINT')}">0</span>đ</p>
+                <p>Phương thức thanh toán: <span th:text="${order.paymentMethod}">COD</span></p>
+            </div>
+            
+            <p>Nếu bạn có bất kỳ thắc mắc nào, vui lòng liên hệ với chúng tôi qua email hoặc số điện thoại.</p>
+            
+            <div style="text-align: center;">
+                <a th:href="@{${appUrl} + '/orders'}" class="button">Xem đơn hàng</a>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>Email này được gửi tự động, vui lòng không trả lời.</p>
+            <p>© 2024 Bakery Shop. All rights reserved.</p>
+        </div>
+    </div>
+</body>
+</html> 

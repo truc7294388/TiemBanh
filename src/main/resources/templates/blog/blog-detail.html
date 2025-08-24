@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${title}">Bakery Shop - Blog Detail</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Dancing+Script:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        /* General Styles */
+        body {
+            font-family: 'Playfair Display', serif;
+            background: linear-gradient(to bottom, #FFF5F5, #FFE4E1); /* Gradient pastel hồng nhạt */
+            color: #4A3C31;
+            margin: 0;
+            min-height: 100vh;
+            animation: pageFadeIn 0.8s ease forwards;
+        }
+
+        /* Page Transition */
+        @keyframes pageFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .page-transition-exit {
+            animation: pageFadeOut 0.4s ease forwards;
+        }
+        @keyframes pageFadeOut {
+            from {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            to {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+        }
+
+        /* Navbar */
+        .navbar {
+            background-color: #FFD1DC; /* Hồng phấn pastel */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            animation: slideDown 0.5s ease;
+        }
+        .navbar-brand, .nav-link {
+            color: #4A3C31 !important;
+            font-weight: 600;
+            transition: color 0.3s ease, transform 0.3s ease;
+        }
+        .nav-link:hover {
+            color: #FF6B6B !important;
+            transform: scale(1.05);
+        }
+        @keyframes slideDown {
+            from {
+                transform: translateY(-100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        /* Breadcrumb */
+        .breadcrumb {
+            background: transparent;
+            margin-bottom: 0;
+        }
+        .breadcrumb-item a {
+            color: #FF8A8A;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        .breadcrumb-item a:hover {
+            color: #FF6B6B;
+        }
+        .breadcrumb-item.active {
+            color: #6B5B4A;
+        }
+
+        /* Blog Header */
+        h1 {
+            font-family: 'Dancing Script', cursive;
+            font-size: 2.8rem;
+            color: #FF6B6B;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
+            animation: textPop 1.2s ease;
+        }
+        .text-muted {
+            color: #6B5B4A !important;
+            font-size: 0.9rem;
+        }
+        @keyframes textPop {
+            0% {
+                transform: scale(0.8);
+                opacity: 0;
+            }
+            80% {
+                transform: scale(1.05);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        /* Blog Image */
+        .img-fluid {
+            border-radius: 15px;
+            max-height: 400px;
+            object-fit: cover;
+            width: 100%;
+            transition: transform 0.4s ease;
+            animation: fadeInUp 0.8s ease forwards;
+        }
+        .img-fluid:hover {
+            transform: scale(1.03);
+        }
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Blog Content */
+        .blog-post .lead {
+            font-size: 1.2rem;
+            color: #4A3C31;
+            font-weight: 500;
+        }
+        .blog-content {
+            font-size: 1rem;
+            line-height: 1.8;
+            color: #4A3C31;
+        }
+        .blog-content p, .blog-content ul, .blog-content ol {
+            margin-bottom: 1.5rem;
+        }
+        .blog-content img {
+            max-width: 100%;
+            border-radius: 10px;
+            margin: 1rem 0;
+        }
+
+        /* Cards (Author, Recent Posts, Related Posts) */
+        .card {
+            border-radius: 20px;
+            background: #FFF5F5;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            animation: cardFadeIn 0.8s ease forwards;
+            transition: transform 0.4s ease;
+        }
+        .card:hover {
+            transform: translateY(-8px);
+            animation: wiggle 0.3s ease;
+        }
+        .card-header {
+            background-color: #FFD1DC;
+            border-bottom: none;
+            padding: 15px;
+            color: #4A3C31;
+            font-family: 'Dancing Script', cursive;
+            font-size: 1.5rem;
+        }
+        .card-title {
+            font-family: 'Dancing Script', cursive;
+            color: #FF6B6B;
+            font-size: 1.3rem;
+        }
+        .card-body img {
+            border-radius: 10px;
+            transition: transform 0.3s ease;
+        }
+        .card-body img:hover {
+            transform: scale(1.1);
+        }
+        .card-body a {
+            color: #FF8A8A;
+            transition: color 0.3s ease;
+        }
+        .card-body a:hover {
+            color: #FF6B6B;
+        }
+        @keyframes cardFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        @keyframes wiggle {
+            0% { transform: translateY(-8px) rotate(0deg); }
+            50% { transform: translateY(-8px) rotate(2deg); }
+            100% { transform: translateY(-8px) rotate(0deg); }
+        }
+
+        /* Share Buttons */
+        .btn-outline-primary {
+            border-color: #FF8A8A;
+            color: #FF8A8A;
+            border-radius: 10px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        .btn-outline-primary:hover {
+            background-color: #FF6B6B;
+            color: #FFF5F5;
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            animation: buttonWiggle 0.3s ease;
+        }
+        .btn-outline-info {
+            border-color: #1DA1F2;
+            color: #1DA1F2;
+            border-radius: 10px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        .btn-outline-info:hover {
+            background-color: #1DA1F2;
+            color: #FFF5F5;
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            animation: buttonWiggle 0.3s ease;
+        }
+        .btn-outline-danger {
+            border-color: #E60023;
+            color: #E60023;
+            border-radius: 10px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        .btn-outline-danger:hover {
+            background-color: #E60023;
+            color: #FFF5F5;
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            animation: buttonWiggle 0.3s ease;
+        }
+        @keyframes buttonWiggle {
+            0% { transform: translateY(-3px) scale(1.05) rotate(0deg); }
+            50% { transform: translateY(-3px) scale(1.05) rotate(2deg); }
+            100% { transform: translateY(-3px) scale(1.05) rotate(0deg); }
+        }
+
+        /* Toast Notification */
+        .toast {
+            border-radius: 12px;
+            border: 2px solid #FF8A8A;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+            animation: toastPop 0.5s ease;
+        }
+        .toast-header {
+            background-color: #FFD1DC;
+            color: #4A3C31;
+            border-bottom: none;
+        }
+        .toast-body {
+            background-color: #FFF5F5;
+            color: #4A3C31;
+            font-size: 1rem;
+        }
+        @keyframes toastPop {
+            0% { transform: scale(0.8); opacity: 0; }
+            80% { transform: scale(1.05); opacity: 1; }
+            100% { transform: scale(1); }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.2rem;
+            }
+            .img-fluid {
+                max-height: 250px;
+            }
+            .card-body {
+                padding: 15px;
+            }
+            .card-title {
+                font-size: 1.3rem;
+            }
+            .blog-content {
+                font-size: 0.95rem;
+            }
+            .lead {
+                font-size: 1.1rem;
+            }
+            .btn-outline-primary, .btn-outline-info, .btn-outline-danger {
+                font-size: 0.9rem;
+                padding: 8px 12px;
+            }
+            .container {
+                padding: 20px;
+            }
+            .card-body img {
+                width: 48px;
+                height: 48px;
+            }
+        }
+    </style>
+</head>
+<body>
+<!-- Navigation -->
+<div th:replace="layout/header :: navbar"></div>
+
+<div class="container py-5">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a th:href="@{/}">Trang chủ</a></li>
+            <li class="breadcrumb-item"><a th:href="@{/blogs}">Blog</a></li>
+            <li class="breadcrumb-item active" aria-current="page" th:text="${blog.title}">Blog title</li>
+        </ol>
+    </nav>
+
+    <div class="row">
+        <!-- Blog Content -->
+        <div class="col-lg-8">
+            <article class="blog-post">
+                <!-- Blog Header -->
+                <header class="mb-4">
+                    <h1 class="mb-3" th:text="${blog.title}">Blog title</h1>
+                    <div class="d-flex align-items-center text-muted mb-4">
+                        <div class="me-4">
+                            <i class="far fa-calendar-alt me-1"></i>
+                            [[${#temporals.format(blog.createdAt, 'dd/MM/yyyy')}]]
+                        </div>
+                        <div class="me-4">
+                            <i class="far fa-user me-1"></i>
+                            [[${blog.authorName}]]
+                        </div>
+                        <div>
+                            <i class="fas fa-clock me-1"></i>
+                            Cập nhật: [[${#temporals.format(blog.updatedAt, 'dd/MM/yyyy HH:mm')}]]
+                        </div>
+                    </div>
+                </header>
+
+                <!-- Featured Image -->
+                <img th:if="${blog.imageUrl}" th:src="@{'/uploads/' + ${blog.imageUrl} ?: '/images/no-image.png'}"
+                     class="img-fluid rounded mb-4" th:alt="${blog.title}">
+
+                <!-- Short Description -->
+                <div class="lead mb-4" th:text="${blog.shortDescription}">
+                    Short description
+                </div>
+
+                <!-- Blog Content -->
+                <div class="blog-content mb-4" th:utext="${blog.content}">
+                    Blog content
+                </div>
+
+                <!-- Author Info -->
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center">
+                            <div>
+                                <h5 class="mb-1">Tác giả</h5>
+                                <p class="mb-0" th:text="${blog.authorName}">Author name</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Share Buttons -->
+                <div class="mb-4">
+                    <h5>Chia sẻ bài viết:</h5>
+                    <div class="d-flex gap-2">
+                        <a th:href="@{'https://www.facebook.com/sharer/sharer.php?u=' + ${#httpServletRequest.requestURL}}"
+                           class="btn btn-outline-primary" target="_blank">
+                            <i class="fab fa-facebook-f"></i> Facebook
+                        </a>
+                        <a th:href="@{'https://twitter.com/intent/tweet?url=' + ${#httpServletRequest.requestURL} + '&text=' + ${blog.title}}"
+                           class="btn btn-outline-info" target="_blank">
+                            <i class="fab fa-twitter"></i> Twitter
+                        </a>
+                        <a th:href="@{'https://pinterest.com/pin/create/button/?url=' + ${#httpServletRequest.requestURL} + '&description=' + ${blog.title}}"
+                           class="btn btn-outline-danger" target="_blank">
+                            <i class="fab fa-pinterest"></i> Pinterest
+                        </a>
+                    </div>
+                </div>
+            </article>
+        </div>
+
+        <!-- Sidebar -->
+        <div class="col-lg-4">
+            <!-- Recent Posts -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Bài viết mới nhất</h5>
+                </div>
+                <div class="card-body">
+                    <div th:each="recentBlog : ${recentBlogs}" class="d-flex mb-3">
+                        <img th:if="${recentBlog.imageUrl}"
+                             th:src="@{'/uploads/' + ${recentBlog.imageUrl} ?: '/images/no-image.png'}"
+                             class="flex-shrink-0 me-3"
+                             style="width: 64px; height: 64px; object-fit: cover;"
+                             th:alt="${recentBlog.title}">
+                        <div>
+                            <h6 class="mb-0">
+                                <a th:href="@{/blogs/{id}(id=${recentBlog.id})}"
+                                   class="text-decoration-none"
+                                   th:text="${recentBlog.title}">Blog title</a>
+                            </h6>
+                            <small class="text-muted">
+                                [[${#temporals.format(recentBlog.createdAt, 'dd/MM/yyyy')}]]
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Related Posts -->
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Bài viết liên quan</h5>
+                </div>
+                <div class="card-body">
+                    <div th:each="relatedBlog : ${relatedBlogs}" class="d-flex mb-3">
+                        <img th:if="${relatedBlog.imageUrl}"
+                             th:src="@{'/uploads/' + ${relatedBlog.imageUrl} ?: '/images/no-image.png'}"
+                             class="flex-shrink-0 me-3"
+                             style="width: 64px; height: 64px; object-fit: cover;"
+                             th:alt="${relatedBlog.title}">
+                        <div>
+                            <h6 class="mb-0">
+                                <a th:href="@{/blogs/{id}(id=${relatedBlog.id})}"
+                                   class="text-decoration-none"
+                                   th:text="${relatedBlog.title}">Blog title</a>
+                            </h6>
+                            <small class="text-muted">
+                                [[${#temporals.format(relatedBlog.createdAt, 'dd/MM/yyyy')}]]
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Footer -->
+<footer th:replace="layout/footer :: footer"></footer>
+
+<!-- Toast for Notifications -->
+<div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+    <div id="notificationToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="toast-header">
+            <strong class="me-auto">Thông báo</strong>
+            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="toast-body"></div>
+    </div>
+</div>
+
+<!-- Blog Detail Scripts -->
+<script th:inline="javascript">
+        $(document).ready(function() {
+            const contextPath = /*[[@{/}]]*/ '';
+            const toast = new bootstrap.Toast(document.getElementById('notificationToast'));
+
+            // Page transition on link clicks
+            $('a[href^="/"]').not('[href="#"]').click(function(e) {
+                e.preventDefault();
+                const href = $(this).attr('href');
+                $('body').addClass('page-transition-exit');
+                setTimeout(() => {
+                    window.location.href = href;
+                }, 400);
+            });
+
+            // Confetti effect for sharing
+            function triggerConfetti() {
+                confetti({
+                    particleCount: 100,
+                    spread: 70,
+                    origin: { y: 0.6 },
+                    colors: ['#FF8A8A', '#FFD1DC', '#FFE4E1', '#FFF5F5'],
+                    shapes: ['circle', 'square'],
+                    scalar: 1.2
+                });
+            }
+
+            // Notification function
+            const showNotification = (message) => {
+                const toastEl = $('#notificationToast');
+                toastEl.find('.toast-body').text(message);
+                toastEl.removeClass('bg-danger text-white');
+                triggerConfetti();
+                toast.show();
+            };
+
+            // Handle share button clicks
+            $('.btn-outline-primary, .btn-outline-info, .btn-outline-danger').click(function(e) {
+                showNotification('Đã chia sẻ bài viết!');
+            });
+        });
+    </script>
+</body>
+</html>

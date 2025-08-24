@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${title}">Bakery Shop - Blog</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Dancing+Script:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <style>
+        /* General Styles */
+        body {
+            font-family: 'Playfair Display', serif;
+            background: linear-gradient(to bottom, #FFF5F5, #FFE4E1); /* Gradient pastel hồng nhạt */
+            color: #4A3C31;
+            margin: 0;
+            min-height: 100vh;
+            animation: pageFadeIn 0.8s ease forwards;
+        }
+
+        /* Page Transition */
+        @keyframes pageFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .page-transition-exit {
+            animation: pageFadeOut 0.4s ease forwards;
+        }
+        @keyframes pageFadeOut {
+            from {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            to {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+        }
+
+        /* Navbar */
+        .navbar {
+            background-color: #FFD1DC; /* Hồng phấn pastel */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            animation: slideDown 0.5s ease;
+        }
+        .navbar-brand, .nav-link {
+            color: #4A3C31 !important;
+            font-weight: 600;
+            transition: color 0.3s ease, transform 0.3s ease;
+        }
+        .nav-link:hover {
+            color: #FF6B6B !important;
+            transform: scale(1.05);
+        }
+        @keyframes slideDown {
+            from {
+                transform: translateY(-100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        /* Page Title and Search */
+        h1 {
+            font-family: 'Dancing Script', cursive;
+            font-size: 3rem;
+            color: #FF6B6B;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
+            animation: textPop 1.2s ease;
+        }
+        .breadcrumb {
+            background: transparent;
+            margin-bottom: 0;
+        }
+        .breadcrumb-item a {
+            color: #FF8A8A;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        .breadcrumb-item a:hover {
+            color: #FF6B6B;
+        }
+        .breadcrumb-item.active {
+            color: #6B5B4A;
+        }
+        .form-control {
+            border-color: #FFD1DC;
+            background: #FFF5F5;
+            color: #4A3C31;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+        .form-control:focus {
+            border-color: #FF8A8A;
+            box-shadow: 0 0 8px rgba(255, 138, 138, 0.3);
+            transform: scale(1.02);
+            background: #FFF5F5;
+        }
+        .form-control::placeholder {
+            color: #6B5B4A;
+            opacity: 0.7;
+        }
+        .btn-outline-primary {
+            border-color: #FF8A8A;
+            color: #FF8A8A;
+            border-radius: 10px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        .btn-outline-primary:hover {
+            background-color: #FF6B6B;
+            border-color: #FF6B6B;
+            color: #FFF5F5;
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            animation: buttonWiggle 0.3s ease;
+        }
+        @keyframes textPop {
+            0% {
+                transform: scale(0.8);
+                opacity: 0;
+            }
+            80% {
+                transform: scale(1.05);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+        @keyframes buttonWiggle {
+            0% { transform: translateY(-3px) scale(1.05) rotate(0deg); }
+            50% { transform: translateY(-3px) scale(1.05) rotate(2deg); }
+            100% { transform: translateY(-3px) scale(1.05) rotate(0deg); }
+        }
+
+        /* Empty State */
+        .fa-newspaper {
+            color: #6B5B4A;
+            animation: bounce 1s infinite;
+        }
+        h4 {
+            color: #4A3C31;
+            font-family: 'Playfair Display', serif;
+        }
+        .text-muted {
+            color: #6B5B4A !important;
+        }
+        @keyframes bounce {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+
+        /* Blog Cards */
+        .card {
+            border-radius: 20px;
+            background: #FFF5F5;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            animation: cardFadeIn 0.8s ease forwards;
+            transition: transform 0.4s ease;
+            overflow: hidden;
+        }
+        .card:hover {
+            transform: translateY(-8px);
+            animation: wiggle 0.3s ease;
+        }
+        .card-img-top {
+            object-fit: cover;
+            height: 200px;
+            transition: transform 0.4s ease;
+        }
+        .card:hover .card-img-top {
+            transform: scale(1.05);
+        }
+        .card-title {
+            font-family: 'Dancing Script', cursive;
+            font-size: 1.5rem;
+            color: #FF6B6B;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        .card-text {
+            color: #4A3C31;
+            font-size: 0.95rem;
+        }
+        .text-muted {
+            font-size: 0.85rem;
+        }
+        .btn-outline-primary {
+            font-size: 0.9rem;
+            padding: 8px 16px;
+        }
+        @keyframes cardFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        @keyframes wiggle {
+            0% { transform: translateY(-8px) rotate(0deg); }
+            50% { transform: translateY(-8px) rotate(2deg); }
+            100% { transform: translateY(-8px) rotate(0deg); }
+        }
+
+        /* Pagination */
+        .pagination .page-link {
+            background-color: #FFF5F5;
+            border-color: #FFD1DC;
+            color: #FF8A8A;
+            border-radius: 8px;
+            margin: 0 5px;
+            transition: all 0.3s ease;
+        }
+        .pagination .page-link:hover {
+            background-color: #FF8A8A;
+            color: #FFF5F5;
+            transform: scale(1.1);
+        }
+        .pagination .page-item.active .page-link {
+            background-color: #FF6B6B;
+            border-color: #FF6B6B;
+            color: #FFF5F5;
+        }
+        .pagination .page-item.disabled .page-link {
+            background-color: #FFF5F5;
+            color: #6B5B4A;
+            opacity: 0.5;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.2rem;
+            }
+            .card-img-top {
+                height: 150px;
+            }
+            .card-body {
+                padding: 15px;
+            }
+            .card-title {
+                font-size: 1.3rem;
+            }
+            .form-control, .btn-outline-primary {
+                font-size: 0.9rem;
+            }
+            .container {
+                padding: 20px;
+            }
+            .pagination .page-link {
+                font-size: 0.9rem;
+                padding: 6px 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+<!-- Navigation -->
+<div th:replace="layout/header :: navbar"></div>
+
+<div class="container py-5">
+    <!-- Page Title -->
+    <div class="row mb-4 align-items-center">
+        <div class="col-md-8">
+            <h1 class="mb-3">Blog</h1>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a th:href="@{/}">Trang chủ</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Blog</li>
+                </ol>
+            </nav>
+        </div>
+        <div class="col-md-4">
+            <form class="d-flex" th:action="@{/blogs/search}" method="get">
+                <input class="form-control me-2" type="search" placeholder="Tìm kiếm bài viết..."
+                       name="keyword" th:value="${param.keyword}">
+                <button class="btn btn-outline-primary" type="submit">
+                    <i class="fas fa-search"></i>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Blog Posts -->
+    <div class="row">
+        <!-- Empty State -->
+        <div th:if="${#lists.isEmpty(blogs)}" class="col-12 text-center py-5">
+            <i class="fas fa-newspaper fa-4x text-muted mb-3"></i>
+            <h4>Không có bài viết nào</h4>
+            <p class="text-muted">Vui lòng quay lại sau</p>
+        </div>
+
+        <!-- Blog Cards -->
+        <div th:each="blog : ${blogs}" class="col-md-4 mb-4">
+            <div class="card h-100">
+                <img th:src="@{'/uploads/' + ${blog.imageUrl} ?: '/images/no-image.png'}" class="card-img-top" th:alt="${blog.title}">
+                <div class="card-body">
+                    <h5 class="card-title" th:text="${blog.title}">Blog Title</h5>
+                    <p class="card-text" th:text="${blog.shortDescription}">Blog Short Description</p>
+                    <p class="card-text">
+                        <small class="text-muted">
+                            <i class="fas fa-user me-1"></i>
+                            <span th:text="${blog.authorName}">Author Name</span>
+                            <i class="fas fa-calendar-alt ms-3 me-1"></i>
+                            <span th:text="${#temporals.format(blog.createdAt, 'dd/MM/yyyy')}">Date</span>
+                        </small>
+                    </p>
+                    <a th:href="@{/blogs/{id}(id=${blog.id})}" class="btn btn-outline-primary">Đọc thêm</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pagination -->
+    <nav th:if="${totalPages > 1}" class="mt-4">
+        <ul class="pagination justify-content-center">
+            <li class="page-item" th:classappend="${currentPage == 0 ? 'disabled' : ''}">
+                <a class="page-link" th:href="@{/blogs(page=${currentPage - 1})}">
+                    <i class="fas fa-chevron-left"></i>
+                </a>
+            </li>
+            <li class="page-item" th:each="i : ${#numbers.sequence(0, totalPages - 1)}"
+                th:classappend="${currentPage == i ? 'active' : ''}">
+                <a class="page-link" th:href="@{/blogs(page=${i})}" th:text="${i + 1}">1</a>
+            </li>
+            <li class="page-item" th:classappend="${currentPage == totalPages - 1 ? 'disabled' : ''}">
+                <a class="page-link" th:href="@{/blogs(page=${currentPage + 1})}">
+                    <i class="fas fa-chevron-right"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</div>
+
+<!-- Footer -->
+<div th:replace="layout/footer :: footer"></div>
+
+<!-- Blog Page Scripts -->
+<script th:inline="javascript">
+        $(document).ready(function() {
+            // Page transition on link clicks
+            $('a[href^="/"]').not('[href="#"]').click(function(e) {
+                e.preventDefault();
+                const href = $(this).attr('href');
+                $('body').addClass('page-transition-exit');
+                setTimeout(() => {
+                    window.location.href = href;
+                }, 400);
+            });
+        });
+    </script>
+</body>
+</html>

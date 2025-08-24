@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+    <footer th:fragment="footer" class="bg-white border-top py-5 mt-5">
+        <div class="container">
+            <div class="row">
+                <!-- About Us -->
+                <div class="col-md-4 mb-4">
+                    <h5 class="mb-3 fw-bold text-primary">Về chúng tôi</h5>
+                    <p class="text-muted">
+                        Bakery Shop tự hào mang đến cho bạn những sản phẩm bánh ngọt chất lượng cao, 
+                        được làm từ nguyên liệu tự nhiên và công thức độc đáo.
+                    </p>
+                    <div class="d-flex gap-3">
+                        <a href="#" class="text-primary fs-5"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="text-danger fs-5"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="text-info fs-5"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="text-danger fs-5"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                <!-- Quick Links -->
+                <div class="col-md-4 mb-4">
+                    <h5 class="mb-3 fw-bold text-primary">Liên kết nhanh</h5>
+                    <ul class="list-unstyled">
+                        <li class="mb-2">
+                            <a th:href="@{/about}" class="text-muted text-decoration-none"><i class="fas fa-info-circle me-2"></i>Giới thiệu</a>
+                        </li>
+                        <li class="mb-2">
+                            <a th:href="@{/products}" class="text-muted text-decoration-none"><i class="fas fa-birthday-cake me-2"></i>Sản phẩm</a>
+                        </li>
+                        <li class="mb-2">
+                            <a th:href="@{/blogs}" class="text-muted text-decoration-none"><i class="fas fa-blog me-2"></i>Blog</a>
+                        </li>
+                        <li class="mb-2">
+                            <a th:href="@{/contact}" class="text-muted text-decoration-none"><i class="fas fa-envelope me-2"></i>Liên hệ</a>
+                        </li>
+                        <li class="mb-2">
+                            <a th:href="@{/terms}" class="text-muted text-decoration-none"><i class="fas fa-file-contract me-2"></i>Điều khoản sử dụng</a>
+                        </li>
+                        <li>
+                            <a th:href="@{/privacy}" class="text-muted text-decoration-none"><i class="fas fa-user-secret me-2"></i>Chính sách bảo mật</a>
+                        </li>
+                    </ul>
+                </div>
+                <!-- Contact Info -->
+                <div class="col-md-4">
+                    <h5 class="mb-3 fw-bold text-primary">Thông tin liên hệ</h5>
+                    <ul class="list-unstyled text-muted">
+                        <li class="mb-2">
+                            <i class="fas fa-map-marker-alt me-2 text-primary"></i>
+                            123 Đường ABC, Quận XYZ, TP.HCM
+                        </li>
+                        <li class="mb-2">
+                            <i class="fas fa-phone me-2 text-success"></i>
+                            (84) 123-456-789
+                        </li>
+                        <li class="mb-2">
+                            <i class="fas fa-envelope me-2 text-warning"></i>
+                            contact@bakeryshop.com
+                        </li>
+                        <li>
+                            <i class="fas fa-clock me-2 text-info"></i>
+                            Thứ 2 - Chủ nhật: 7:00 - 22:00
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <hr class="my-4">
+            <!-- Copyright -->
+            <div class="row align-items-center">
+                <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
+                    <p class="text-muted mb-0">
+                        &copy; 2024 <span class="fw-bold text-primary">Bakery Shop</span>. All rights reserved.
+                    </p>
+                </div>
+                <div class="col-md-6 text-center text-md-end">
+                    <img th:src="@{'/uploads/method1.png'}" class="me-2" style="height:32px;" th:alt="method1">
+                    <img th:src="@{'/uploads/method2.png'}" class="me-2" style="height:32px;" th:alt="method2">
+                    <img th:src="@{'/uploads/method1.png'}" style="height:32px;" th:alt="method1">
+                </div>
+            </div>
+        </div>
+    </footer>
+</body>
+</html> 

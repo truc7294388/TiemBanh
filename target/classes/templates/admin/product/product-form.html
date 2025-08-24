@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="admin/layout/header :: head">
+    <style>
+        /* General Styles */
+        body.sb-nav-fixed {
+            font-family: 'Playfair Display', serif;
+            background: linear-gradient(to bottom, #FFF5F5, #FFE4E1);
+            color: #4A3C31;
+            margin: 0;
+            min-height: 100vh;
+            animation: pageFadeIn 0.8s ease forwards;
+        }
+
+        /* Page Transition */
+        @keyframes pageFadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .page-transition-exit {
+            animation: pageFadeOut 0.4s ease forwards;
+        }
+        @keyframes pageFadeOut {
+            from { opacity: 1; transform: translateY(0); }
+            to { opacity: 0; transform: translateY(-20px); }
+        }
+
+        /* Content */
+        #layoutSidenav_content {
+            padding: 20px;
+            transition: padding 0.3s ease;
+        }
+
+        /* Breadcrumb */
+        .breadcrumb {
+            background: #FFE4E1;
+            border-radius: 10px;
+            padding: 0.75rem 1rem;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            animation: fadeInUp 0.5s ease;
+        }
+
+        .breadcrumb-item a {
+            color: #4A3C31;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .breadcrumb-item a:hover {
+            color: #FF8A8A;
+        }
+
+        .breadcrumb-item.active {
+            color: #6B5B4A;
+        }
+
+        /* Cards */
+        .card {
+            border: none;
+            border-radius: 15px;
+            background: #FFF5F5;
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-body {
+            padding: 2rem;
+        }
+
+        /* Form */
+        .form-label {
+            font-weight: 600;
+            color: #4A3C31;
+        }
+
+        .form-control {
+            border-radius: 8px;
+            border-color: #FFD1DC;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .form-control:focus {
+            border-color: #FF8A8A;
+            box-shadow: 0 0 5px rgba(255, 138, 138, 0.5);
+        }
+
+        .form-select {
+            border-radius: 8px;
+            border-color: #FFD1DC;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .form-select:focus {
+            border-color: #FF8A8A;
+            box-shadow: 0 0 5px rgba(255, 138, 138, 0.5);
+        }
+
+        .invalid-feedback {
+            color: #FF6B6B;
+        }
+
+        .needs-validation.was-validated .form-control:invalid,
+        .needs-validation.was-validated .form-select:invalid {
+            border-color: #FF6B6B;
+        }
+
+        /* Image Preview */
+        #imagePreview {
+            display: none;
+            max-width: 200px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            animation: fadeInUp 0.5s ease;
+        }
+
+        /* Checkboxes */
+        .form-check-label {
+            color: #4A3C31;
+        }
+
+        /* Buttons */
+        .btn {
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background-color: #6B5B4A;
+            border-color: #6B5B4A;
+        }
+
+        .btn-primary:hover {
+            background-color: #4A3C31;
+            border-color: #4A3C31;
+            transform: scale(1.05);
+        }
+
+        .btn-secondary {
+            background-color: #FFD1DC;
+            border-color: #FFD1DC;
+            color: #4A3C31;
+        }
+
+        .btn-secondary:hover {
+            background-color: #FF8A8A;
+            border-color: #FF8A8A;
+            color: #FFF5F5;
+            transform: scale(1.05);
+        }
+
+        /* Alerts */
+        .alert {
+            border-radius: 10px;
+            animation: fadeInUp 0.5s ease;
+        }
+
+        .alert-success {
+            background-color: #FFE4E1;
+            color: #4A3C31;
+            border-color: #FFD1DC;
+        }
+
+        .alert-danger {
+            background-color: #FF6B6B;
+            color: #FFF5F5;
+            border-color: #FF8A8A;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes slideDown {
+            from { transform: translateY(-20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            #layoutSidenav_content {
+                padding: 10px;
+            }
+            .card-body {
+                padding: 1rem;
+            }
+            .row.mb-3 .col-md-4 {
+                flex: 0 0 100%;
+                max-width: 100%;
+            }
+            h1.mt-4 {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body class="sb-nav-fixed">
+<nav th:replace="admin/layout/header :: navbar"></nav>
+<div id="layoutSidenav">
+    <div th:replace="admin/layout/sidebar :: sidebar"></div>
+    <div id="layoutSidenav_content">
+        <main>
+            <div class="container-fluid px-4">
+                <h1 class="mt-4" th:text="${product.id != null ? 'Chỉnh sửa sản phẩm' : 'Thêm sản phẩm mới'}">
+                    Thêm sản phẩm mới
+                </h1>
+                <ol class="breadcrumb mb-4">
+                    <li class="breadcrumb-item"><a th:href="@{/admin}">Dashboard</a></li>
+                    <li class="breadcrumb-item"><a th:href="@{/admin/products}">Sản phẩm</a></li>
+                    <li class="breadcrumb-item active"
+                        th:text="${product.id != null ? 'Chỉnh sửa' : 'Thêm mới'}">Thêm mới</li>
+                </ol>
+
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <form th:action="${product.id != null ?
+                                            '/admin/products/edit/' + product.id :
+                                            '/admin/products/create'}"
+                              th:object="${product}"
+                              method="post"
+                              enctype="multipart/form-data"
+                              class="needs-validation"
+                              novalidate>
+
+                            <!-- Product Name -->
+                            <div class="mb-3">
+                                <label for="name" class="form-label">Tên sản phẩm *</label>
+                                <input type="text" class="form-control" id="name" th:field="*{name}" required>
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('name')}"
+                                     th:errors="*{name}">
+                                    Vui lòng nhập tên sản phẩm
+                                </div>
+                            </div>
+
+                            <!-- Category -->
+                            <div class="mb-3">
+                                <label for="categoryId" class="form-label">Danh mục *</label>
+                                <select class="form-select" id="categoryId" th:field="*{categoryId}" required>
+                                    <option value="">Chọn danh mục</option>
+                                    <option th:each="category : ${categories}"
+                                            th:value="${category.id}"
+                                            th:text="${category.name}">
+                                        Category name
+                                    </option>
+                                </select>
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('categoryId')}"
+                                     th:errors="*{categoryId}">
+                                    Vui lòng chọn danh mục
+                                </div>
+                            </div>
+
+                            <!-- Price -->
+                            <div class="mb-3">
+                                <label for="price" class="form-label">Giá (VNĐ) *</label>
+                                <input type="number" class="form-control" id="price" th:field="*{price}"
+                                       min="0" step="1000" required>
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('price')}"
+                                     th:errors="*{price}">
+                                    Vui lòng nhập giá hợp lệ
+                                </div>
+                            </div>
+
+                            <!-- Stock -->
+                            <div class="mb-3">
+                                <label for="stock" class="form-label">Số lượng tồn kho *</label>
+                                <input type="number" class="form-control" id="stock" th:field="*{stock}"
+                                       min="0" required>
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('stock')}"
+                                     th:errors="*{stock}">
+                                    Vui lòng nhập số lượng hợp lệ
+                                </div>
+                            </div>
+
+                            <!-- Description -->
+                            <div class="mb-3">
+                                <label for="description" class="form-label">Mô tả</label>
+                                <textarea class="form-control" id="description" th:field="*{description}"
+                                          rows="3"></textarea>
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('description')}"
+                                     th:errors="*{description}">
+                                    Mô tả không hợp lệ
+                                </div>
+                            </div>
+
+                            <!-- Image -->
+                            <div class="mb-3">
+                                <label for="image" class="form-label">Hình ảnh</label>
+                                <input type="file" class="form-control" id="image" name="image"
+                                       accept="image/*" onchange="previewImage(this);">
+                                <div class="mt-2">
+                                    <img id="imagePreview" th:if="${product.imageUrl}"
+                                         th:src="@{'/uploads/' + ${product.imageUrl}}"
+                                         class="img-thumbnail" style="max-width: 200px;">
+                                </div>
+                            </div>
+
+                            <!-- Flags -->
+                            <div class="row mb-3">
+                                <div class="col-md-4">
+                                    <div class="form-check">
+                                        <input type="checkbox" class="form-check-input"
+                                               id="bestSeller" th:field="*{bestSeller}">
+                                        <label class="form-check-label" for="bestSeller">
+                                            Sản phẩm bán chạy
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-check">
+                                        <input type="checkbox" class="form-check-input"
+                                               id="newArrival" th:field="*{newArrival}">
+                                        <label class="form-check-label" for="newArrival">
+                                            Sản phẩm mới
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-check">
+                                        <input type="checkbox" class="form-check-input"
+                                               id="active" th:field="*{active}">
+                                        <label class="form-check-label" for="active">
+                                            Đang kinh doanh
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Submit Buttons -->
+                            <div class="mt-4">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-save"></i>
+                                    <span th:text="${product.id != null ? 'Cập nhật' : 'Tạo mới'}">
+                                            Tạo mới
+                                        </span>
+                                </button>
+                                <a th:href="@{/admin/products}" class="btn btn-secondary">
+                                    <i class="fas fa-times"></i> Hủy
+                                </a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </main>
+        <footer th:replace="admin/layout/footer :: footer"></footer>
+    </div>
+</div>
+
+<div th:replace="admin/layout/footer :: scripts"></div>
+
+<!-- Toast for Notifications -->
+<div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+    <div id="notificationToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="toast-header">
+            <strong class="me-auto">Thông báo</strong>
+            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="toast-body"></div>
+    </div>
+</div>
+
+<script>
+        // Form validation
+        (function () {
+            'use strict'
+            var forms = document.querySelectorAll('.needs-validation')
+            Array.prototype.slice.call(forms)
+                .forEach(function (form) {
+                    form.addEventListener('submit', function (event) {
+                        if (!form.checkValidity()) {
+                            event.preventDefault()
+                            event.stopPropagation()
+                        }
+                        form.classList.add('was-validated')
+                    }, false)
+                })
+        })()
+
+        // Image preview
+        function previewImage(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('imagePreview').src = e.target.result;
+                    document.getElementById('imagePreview').style.display = 'block';
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        // Initialize CKEditor for description
+        ClassicEditor
+            .create(document.querySelector('#description'))
+            .catch(error => {
+                console.error(error);
+            });
+
+        // Page transition on link clicks
+        $('a[href^="/"]').not('[href="#"]').click(function(e) {
+            e.preventDefault();
+            const href = $(this).attr('href');
+            $('body').addClass('page-transition-exit');
+            setTimeout(() => {
+                window.location.href = href;
+            }, 400);
+        });
+
+        // Confetti effect
+        function triggerConfetti() {
+            confetti({
+                particleCount: 100,
+                spread: 70,
+                origin: { y: 0.6 },
+                colors: ['#FF8A8A', '#FFD1DC', '#FFE4E1', '#FFF5F5'],
+                shapes: ['circle', 'square'],
+                scalar: 1.2
+            });
+        }
+
+        // Notification function
+        const toast = new bootstrap.Toast(document.getElementById('notificationToast'));
+        const showNotification = (message, isError = false) => {
+            const toastEl = $('#notificationToast');
+            toastEl.find('.toast-body').text(message);
+            if (isError) {
+                toastEl.addClass('bg-danger text-white');
+            } else {
+                toastEl.removeClass('bg-danger text-white');
+                triggerConfetti();
+            }
+            toast.show();
+        };
+
+        // Handle form submission with AJAX
+        $('form.needs-validation').submit(function(e) {
+            e.preventDefault();
+            const form = $(this);
+            const url = form.attr('action');
+            const formData = new FormData(form[0]);
+            $.ajax({
+                url: url,
+                method: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function(response) {
+                    showNotification(response.message || 'Thao tác thành công!');
+                    setTimeout(() => window.location.href = '/bakery-shop/admin/products', 2000);
+                },
+                error: function(xhr) {
+                    let errorMessage = 'Có lỗi xảy ra!';
+                    if (xhr.responseJSON && xhr.responseJSON.message) {
+                        errorMessage = xhr.responseJSON.message;
+                    }
+                    showNotification(errorMessage, true);
+                }
+            });
+        });
+    </script>
+</body>
+</html>

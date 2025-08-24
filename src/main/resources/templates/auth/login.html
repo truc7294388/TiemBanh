@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${title}">Bakery Shop - Đăng nhập</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Dancing+Script:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        /* General Styles */
+        body {
+            font-family: 'Playfair Display', serif;
+            background: url('/images/banh-kem-vanilla.jpg') center center/cover no-repeat fixed;
+            color: #4A3C31;
+            margin: 0;
+            min-height: 100vh;
+            position: relative;
+            animation: pageFadeIn 0.8s ease forwards;
+        }
+        .overlay {
+            background: rgba(255, 255, 255, 0.75); /* Nền mờ trắng */
+            min-height: 100vh;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            z-index: 0;
+        }
+
+        /* Page Transition */
+        @keyframes pageFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .page-transition-exit {
+            animation: pageFadeOut 0.4s ease forwards;
+        }
+        @keyframes pageFadeOut {
+            from {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            to {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+        }
+
+        /* Navbar */
+        .navbar {
+            background-color: #FFD1DC; /* Hồng phấn pastel */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            animation: slideDown 0.5s ease;
+        }
+        .navbar-brand, .nav-link {
+            color: #4A3C31 !important;
+            font-weight: 600;
+            transition: color 0.3s ease, transform 0.3s ease;
+        }
+        .nav-link:hover {
+            color: #FF6B6B !important;
+            transform: scale(1.05);
+        }
+        @keyframes slideDown {
+            from {
+                transform: translateY(-100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        /* Login Card */
+        .card {
+            border-radius: 20px;
+            background: rgba(255, 245, 245, 0.95); /* Nền hồng nhạt mờ */
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            animation: cardFadeIn 1s ease forwards;
+            overflow: hidden;
+            transition: transform 0.4s ease;
+        }
+        .card:hover {
+            transform: translateY(-8px);
+            animation: wiggle 0.3s ease;
+        }
+        .card-body {
+            padding: 40px;
+        }
+        .text-primary {
+            color: #FF8A8A !important; /* Hồng pastel */
+        }
+        h2 {
+            font-family: 'Dancing Script', cursive;
+            font-size: 2.8rem;
+            color: #FF6B6B;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
+            animation: textPop 1.2s ease;
+        }
+        p.text-muted {
+            color: #6B5B4A !important;
+        }
+        @keyframes cardFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        @keyframes wiggle {
+            0% { transform: translateY(-8px) rotate(0deg); }
+            50% { transform: translateY(-8px) rotate(2deg); }
+            100% { transform: translateY(-8px) rotate(0deg); }
+        }
+        @keyframes textPop {
+            0% {
+                transform: scale(0.8);
+                opacity: 0;
+            }
+            80% {
+                transform: scale(1.05);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        /* Form Elements */
+        .input-group-text {
+            background: #FFF5F5;
+            border-color: #FFD1DC;
+            color: #FF8A8A;
+            transition: all 0.3s ease;
+        }
+        .form-control {
+            border-color: #FFD1DC;
+            background: #FFF5F5;
+            color: #4A3C31;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+        .form-control:focus {
+            border-color: #FF8A8A;
+            box-shadow: 0 0 8px rgba(255, 138, 138, 0.3);
+            transform: scale(1.02);
+            background: #FFF5F5;
+            color: #4A3C31;
+        }
+        .form-control::placeholder {
+            color: #6B5B4A;
+            opacity: 0.7;
+        }
+        .form-check-input {
+            border-color: #FFD1DC;
+            background-color: #FFF5F5;
+        }
+        .form-check-input:checked {
+            background-color: #FF8A8A;
+            border-color: #FF8A8A;
+        }
+        .form-check-label {
+            color: #6B5B4A;
+        }
+        .btn-primary {
+            background-color: #FF8A8A;
+            border-color: #FF8A8A;
+            border-radius: 10px;
+            padding: 12px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+        }
+        .btn-primary:hover {
+            background-color: #FF6B6B;
+            border-color: #FF6B6B;
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            animation: buttonWiggle 0.3s ease;
+        }
+        @keyframes buttonWiggle {
+            0% { transform: translateY(-3px) scale(1.05) rotate(0deg); }
+            50% { transform: translateY(-3px) scale(1.05) rotate(2deg); }
+            100% { transform: translateY(-3px) scale(1.05) rotate(0deg); }
+        }
+
+        /* Alerts */
+        .alert {
+            border-radius: 10px;
+            animation: fadeInUp 0.5s ease;
+            margin-bottom: 20px;
+        }
+        .alert-success {
+            background-color: #FFE4E1;
+            color: #4A3C31;
+            border-color: #FFD1DC;
+        }
+        .alert-danger {
+            background-color: #FF6B6B;
+            color: #FFF5F5;
+            border-color: #FF8A8A;
+        }
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Links */
+        a.text-primary {
+            color: #FF8A8A !important;
+            transition: color 0.3s ease, transform 0.3s ease;
+        }
+        a.text-primary:hover {
+            color: #FF6B6B !important;
+            transform: scale(1.05);
+        }
+
+        /* Logo */
+        img.mb-2 {
+            transition: transform 0.3s ease;
+        }
+        img.mb-2:hover {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .card-body {
+                padding: 20px;
+            }
+            h2 {
+                font-size: 2.2rem;
+            }
+            .form-control, .btn-primary {
+                font-size: 0.95rem;
+            }
+            .input-group-text {
+                padding: 8px;
+            }
+            .container {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="overlay"></div>
+<!-- Navigation -->
+<div th:replace="layout/header :: navbar"></div>
+<div class="container py-5 position-relative">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-5">
+            <div class="card shadow-lg border-0 rounded-4">
+                <div class="card-body p-5">
+                    <div class="text-center mb-4">
+                        <div class="mb-3">
+                            <img th:src="@{/images/logo.png}" alt="Bakery Shop Logo" height="48" class="mb-2">
+                        </div>
+                        <h2 class="mb-2 fw-bold text-primary">Đăng nhập</h2>
+                        <p class="text-muted">Chào mừng bạn quay trở lại!</p>
+                    </div>
+                    <!-- Alert Messages -->
+                    <div th:if="${param.Locked}" class="alert alert-danger" role="alert">
+                        Tài khoản của bạn đã bị khóa vui lòng liên hệ Admin để mở tài khoản : 0386693354
+                    </div>
+                    <div th:if="${param.error}" class="alert alert-danger" role="alert">
+                        Email hoặc mật khẩu không chính xác, hoặc tài khoản chưa được xác thực. Vui lòng kiểm tra email để xác thực tài khoản.
+                    </div>
+
+                    <div th:if="${param.logout}" class="alert alert-success" role="alert">
+                        Bạn đã đăng xuất thành công
+                    </div>
+                    <div th:if="${param.registered}" class="alert alert-success" role="alert">
+                        Đăng ký thành công!.
+                    </div>
+                    <!-- Login Form -->
+                    <form th:action="@{/auth/login}" method="post" autocomplete="on">
+                        <div class="mb-3 input-group">
+                            <span class="input-group-text bg-white border-end-0"><i class="fas fa-envelope text-primary"></i></span>
+                            <input type="email" class="form-control border-start-0" id="username" name="username" placeholder="Email" required autofocus>
+                        </div>
+                        <div class="mb-3 input-group">
+                            <span class="input-group-text bg-white border-end-0"><i class="fas fa-lock text-primary"></i></span>
+                            <input type="password" class="form-control border-start-0" id="password" name="password" placeholder="Mật khẩu" required>
+                        </div>
+                        <div class="mb-3 form-check d-flex align-items-center">
+                            <input type="checkbox" class="form-check-input" id="remember-me" name="remember-me">
+                            <label class="form-check-label ms-2" for="remember-me">Ghi nhớ đăng nhập</label>
+                        </div>
+                        <div class="d-grid mb-2">
+                            <button type="submit" class="btn btn-primary btn-lg fw-bold">Đăng nhập</button>
+                        </div>
+                    </form>
+                    <!-- Additional Links -->
+                    <div class="text-center mt-4">
+                        <p class="mb-2">
+                            <a th:href="@{/auth/forgot-password}" class="text-decoration-none text-primary fw-semibold">Quên mật khẩu?</a>
+                        </p>
+                        <p class="mb-0">
+                            Chưa có tài khoản?
+                            <a th:href="@{/auth/register}" class="text-decoration-none text-primary fw-semibold">Đăng ký ngay</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Footer -->
+<div th:replace="layout/footer :: footer"></div>
+
+<!-- JavaScript for Page Transition and Confetti -->
+<script th:inline="javascript">
+        $(document).ready(function() {
+            const contextPath = /*[[@{/}]]*/ '';
+
+            // Page transition on link clicks
+            $('a[href^="/"]').not('[href="#"]').click(function(e) {
+                e.preventDefault();
+                const href = $(this).attr('href');
+                $('body').addClass('page-transition-exit');
+                setTimeout(() => {
+                    window.location.href = href;
+                }, 400);
+            });
+
+            // Confetti effect (trigger manually for demo, or integrate with login success)
+            function triggerConfetti() {
+                confetti({
+                    particleCount: 100,
+                    spread: 70,
+                    origin: { y: 0.6 },
+                    colors: ['#FF8A8A', '#FFD1DC', '#FFE4E1', '#FFF5F5'],
+                    shapes: ['circle', 'square'],
+                    scalar: 1.2
+                });
+            }
+
+            // Example: Trigger confetti on form submission success (requires server-side integration)
+            $('form').on('submit', function(e) {
+                // This is a placeholder; actual success depends on server response
+                // Integrate with AJAX if needed
+                // e.preventDefault(); // Uncomment for AJAX
+                // $.post(contextPath + '/auth/login', $(this).serialize(), function(response) {
+                //     if (response.success) {
+                //         triggerConfetti();
+                //         setTimeout(() => window.location.href = contextPath + '/', 1000);
+                //     }
+                // });
+            });
+        });
+    </script>
+</body>
+</html>
