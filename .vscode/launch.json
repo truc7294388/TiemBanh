@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-BakeryShopApplication<bakery-shop>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.bakeryshop.BakeryShopApplication",
+            "projectName": "bakery-shop",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}

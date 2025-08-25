@@ -449,8 +449,8 @@
                 <div class="card h-100 border-0 shadow-sm">
                     <img th:src="@{'/uploads/' + ${product.imageUrl} ?: '/images/no-image.png'}" class="card-img-top rounded-top" th:alt="${product.name}">
                     <div class="card-body">
-                        <h5 class="card-title fw-bold" th:text="${product.name}">Product Name</h5>
-                        <p class="card-text text-muted small" th:text="${product.description}">Description</p>
+                        <h5 class="card-title fw-bold" th:text="${product.name}">Tên sản phẩm</h5>
+                        <!-- <p class="card-text text-muted small" th:text="${product.description}">Mô tả</p> -->
                         <p class="card-text mb-2">
                             <span class="text-primary fw-bold fs-5" th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'">Price</span>
                         </p>

@@ -455,7 +455,7 @@
                         </div>
                         <div class="card-body">
                             <h5 class="card-title fw-bold" th:text="${product.name}">Product name</h5>
-                            <p class="card-text text-muted small" th:text="${#strings.length(product.description) > 100 ? #strings.substring(product.description, 0, 97) + '...' : product.description}">Description</p>
+                            <!-- <p class="card-text text-muted small" th:text="${#strings.length(product.description) > 100 ? #strings.substring(product.description, 0, 97) + '...' : product.description}">Description</p> -->
                             <div class="d-flex justify-content-between align-items-center mb-2">
                                 <span class="text-primary fw-bold fs-5" th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT') + ' VNĐ'}">0 VNĐ</span>
                                 <span th:if="${product.stock <= 0}" class="badge bg-danger">Hết hàng</span>
