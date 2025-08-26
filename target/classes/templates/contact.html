@@ -11,14 +11,57 @@
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
         /* General Styles */
-        body {
-            font-family: 'Playfair Display', serif;
-            background: linear-gradient(to bottom, #FFF5F5, #FFE4E1); /* Gradient pastel hồng nhạt */
-            color: #4A3C31;
-            margin: 0;
-            min-height: 100vh;
-            animation: pageFadeIn 0.8s ease forwards;
-        }
+        /* BỎ transform/animation khỏi body để không ảnh hưởng phần tử fixed */
+body {
+    font-family: 'Playfair Display', serif;
+    background: linear-gradient(to bottom, #FFF5F5, #FFE4E1);
+    color: #4A3C31;
+    margin: 0;
+    min-height: 100vh;
+}
+
+/* Áp hiệu ứng chuyển trang vào .page-wrapper thay vì body */
+/* .page-wrapper {
+    animation: pageFadeIn 0.8s ease forwards;
+}
+.page-wrapper.page-transition-exit {
+    animation: pageFadeOut 0.4s ease forwards;
+} */
+
+/* Toast cố định góc phải trên, nổi trên mọi thứ */
+.toast-fixed {
+    position: fixed;
+    bottom: 1rem;   /* cách dưới màn hình */
+    right: 1rem;    /* cách phải màn hình */
+    z-index: 2000;  /* nổi trên các thành phần khác */
+}
+
+/* Giữ style toast như cũ */
+.toast {
+    border-radius: 12px;
+    border: 2px solid #FF8A8A;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    animation: toastPop 0.5s ease;
+}
+.toast-header {
+    background-color: #FFD1DC;
+    color: #4A3C31;
+    border-bottom: none;
+}
+.toast-body {
+    background-color: #FFF5F5;
+    color: #4A3C31;
+    font-size: 1rem;
+}
+.bg-danger.text-white .toast-header {
+    background-color: #FF6B6B;
+    color: #FFF5F5;
+}
+.bg-danger.text-white .toast-body {
+    background-color: #FFE4E1;
+    color: #4A3C31;
+}
+
         /**/
         /* Page Transition */
         @keyframes pageFadeIn {
@@ -399,84 +442,87 @@
 <!-- Footer -->
 <div th:replace="layout/footer :: footer"></div>
 
-<!-- Toast for Notifications -->
-<div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+<body>
+ 
+
+  <!-- Toast cố định góc phải dưới -->
+  <div class="toast-fixed">
     <div id="notificationToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
-        <div class="toast-header">
-            <strong class="me-auto">Thông báo</strong>
-            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
-        </div>
-        <div class="toast-body"></div>
+      <div class="toast-header">
+        <strong class="me-auto">Thông báo</strong>
+        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+      </div>
+      <div class="toast-body"></div>
     </div>
-</div>
+  </div>
+</body>
+
 
 <!-- Contact Scripts -->
 <!-- Handle form submission -->
 <script th:inline="javascript">
     $(document).ready(function() {
-        const contextPath = /*[[@{/}]]*/ '';
-        const toast = new bootstrap.Toast(document.getElementById('notificationToast'));
+    const contextPath = /*[[@{/}]]*/ '';
+    const toastEl = document.getElementById('notificationToast');
+    // Tự ẩn sau 4 giây, có animation
+    const toast = new bootstrap.Toast(toastEl, { autohide: true, delay: 4000 });
 
-        // Page transition on link clicks
-        $('a[href^="/"]').not('[href="#"]').click(function(e) {
-            e.preventDefault();
-            const href = $(this).attr('href');
-            $('body').addClass('page-transition-exit');
-            setTimeout(() => {
-                window.location.href = href;
-            }, 400);
+    // Page transition: áp dụng trên .page-wrapper để không ảnh hưởng position:fixed
+    const $page = $('.page-wrapper');
+    $('a[href^="/"]').not('[href="#"]').on('click', function(e) {
+        e.preventDefault();
+        const href = $(this).attr('href');
+        $page.addClass('page-transition-exit');
+        setTimeout(() => { window.location.href = href; }, 400);
+    });
+
+    function triggerConfetti() {
+        confetti({
+            particleCount: 100,
+            spread: 70,
+            origin: { y: 0.2 }, // bắn từ gần phía trên
+            colors: ['#FF8A8A', '#FFD1DC', '#FFE4E1', '#FFF5F5'],
+            shapes: ['circle', 'square'],
+            scalar: 1.2
         });
+    }
 
-        // Confetti effect
-        function triggerConfetti() {
-            confetti({
-                particleCount: 100,
-                spread: 70,
-                origin: { y: 0.6 },
-                colors: ['#FF8A8A', '#FFD1DC', '#FFE4E1', '#FFF5F5'],
-                shapes: ['circle', 'square'],
-                scalar: 1.2
-            });
+    const showNotification = (message, isError = false) => {
+        const $toastEl = $('#notificationToast');
+        $toastEl.find('.toast-body').html(message);
+        if (isError) {
+            $toastEl.addClass('bg-danger text-white');
+        } else {
+            $toastEl.removeClass('bg-danger text-white');
+            triggerConfetti();
         }
+        toast.show();
+    };
 
-        // Notification function
-        const showNotification = (message, isError = false) => {
-            const toastEl = $('#notificationToast');
-            toastEl.find('.toast-body').html(message);
-            if (isError) {
-                toastEl.addClass('bg-danger text-white');
-            } else {
-                toastEl.removeClass('bg-danger text-white');
-                triggerConfetti(); // Trigger confetti on success
-            }
-            toast.show();
-        };
-
-        // Handle form submission
-        $('#contactForm').on('submit', function(e) {
-            e.preventDefault();
-            const form = $(this);
-            $.ajax({
-                url: contextPath + 'contact/send',
-                method: 'POST',
-                data: form.serialize(),
-                success: function(response) {
-                    // Hiển thị thông báo cảm ơn
-                    showNotification(
-                        'Cảm ơn bạn đã gửi phản hồi đến chúng tôi!<br>Chúng tôi sẽ phản hồi sớm lại cho bạn.'
-                    );
-                    form[0].reset();
-                },
-                error: function(xhr) {
-                    let errorMessage = 'Có lỗi xảy ra khi gửi tin nhắn!';
-                    if (xhr.responseJSON && xhr.responseJSON.message) {
-                        errorMessage = xhr.responseJSON.message;
-                    }
-                    showNotification(errorMessage, true);
+    $('#contactForm').on('submit', function(e) {
+        e.preventDefault();
+        const form = $(this);
+        $.ajax({
+            url: contextPath + 'contact/send',
+            method: 'POST',
+            data: form.serialize(),
+            success: function() {
+                showNotification(
+                    'Cảm ơn bạn đã gửi phản hồi đến chúng tôi!<br>Chúng tôi sẽ phản hồi sớm lại cho bạn.'
+                );
+                form[0].reset();
+            },
+            error: function(xhr) {
+                let errorMessage = 'Có lỗi xảy ra khi gửi tin nhắn!';
+                if (xhr.responseJSON && xhr.responseJSON.message) {
+                    errorMessage = xhr.responseJSON.message;
                 }
-            });
+                showNotification(errorMessage, true);
+            }
         });
     });
+});
+
 </script>
 
 </body>

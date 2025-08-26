@@ -20,7 +20,9 @@
             animation: pageFadeIn 0.8s ease forwards;
             overflow-x: hidden;
         }
-
+        .price-highlight {
+    color: #FF6B6B !important; /* màu giống tiêu đề "Sản phẩm bán chạy" */
+}
         /* Page Transition */
         @keyframes pageFadeIn {
             from {
@@ -451,9 +453,12 @@
                     <div class="card-body">
                         <h5 class="card-title fw-bold" th:text="${product.name}">Tên sản phẩm</h5>
                         <!-- <p class="card-text text-muted small" th:text="${product.description}">Mô tả</p> -->
-                        <p class="card-text mb-2">
-                            <span class="text-primary fw-bold fs-5" th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'">Price</span>
-                        </p>
+                       <p class="card-text mb-2">
+    <span class="price-highlight fw-bold fs-5"
+          th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'">
+        Price
+    </span>
+</p>
                     </div>
                     <div class="card-footer bg-white border-top-0 text-center">
                         <a th:href="@{/products/{id}(id=${product.id})}" class="btn btn-outline-primary me-2">Chi tiết</a>
