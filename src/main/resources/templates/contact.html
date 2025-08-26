@@ -19,7 +19,7 @@
             min-height: 100vh;
             animation: pageFadeIn 0.8s ease forwards;
         }
-
+        /**/
         /* Page Transition */
         @keyframes pageFadeIn {
             from {
@@ -411,68 +411,73 @@
 </div>
 
 <!-- Contact Scripts -->
+<!-- Handle form submission -->
 <script th:inline="javascript">
-        $(document).ready(function() {
-            const contextPath = /*[[@{/}]]*/ '';
-            const toast = new bootstrap.Toast(document.getElementById('notificationToast'));
+    $(document).ready(function() {
+        const contextPath = /*[[@{/}]]*/ '';
+        const toast = new bootstrap.Toast(document.getElementById('notificationToast'));
 
-            // Page transition on link clicks
-            $('a[href^="/"]').not('[href="#"]').click(function(e) {
-                e.preventDefault();
-                const href = $(this).attr('href');
-                $('body').addClass('page-transition-exit');
-                setTimeout(() => {
-                    window.location.href = href;
-                }, 400);
+        // Page transition on link clicks
+        $('a[href^="/"]').not('[href="#"]').click(function(e) {
+            e.preventDefault();
+            const href = $(this).attr('href');
+            $('body').addClass('page-transition-exit');
+            setTimeout(() => {
+                window.location.href = href;
+            }, 400);
+        });
+
+        // Confetti effect
+        function triggerConfetti() {
+            confetti({
+                particleCount: 100,
+                spread: 70,
+                origin: { y: 0.6 },
+                colors: ['#FF8A8A', '#FFD1DC', '#FFE4E1', '#FFF5F5'],
+                shapes: ['circle', 'square'],
+                scalar: 1.2
             });
+        }
 
-            // Confetti effect
-            function triggerConfetti() {
-                confetti({
-                    particleCount: 100,
-                    spread: 70,
-                    origin: { y: 0.6 },
-                    colors: ['#FF8A8A', '#FFD1DC', '#FFE4E1', '#FFF5F5'],
-                    shapes: ['circle', 'square'],
-                    scalar: 1.2
-                });
+        // Notification function
+        const showNotification = (message, isError = false) => {
+            const toastEl = $('#notificationToast');
+            toastEl.find('.toast-body').html(message);
+            if (isError) {
+                toastEl.addClass('bg-danger text-white');
+            } else {
+                toastEl.removeClass('bg-danger text-white');
+                triggerConfetti(); // Trigger confetti on success
             }
+            toast.show();
+        };
 
-            // Notification function
-            const showNotification = (message, isError = false) => {
-                const toastEl = $('#notificationToast');
-                toastEl.find('.toast-body').text(message);
-                if (isError) {
-                    toastEl.addClass('bg-danger text-white');
-                } else {
-                    toastEl.removeClass('bg-danger text-white');
-                    triggerConfetti(); // Trigger confetti on success
-                }
-                toast.show();
-            };
-
-            // Handle form submission
-            $('#contactForm').on('submit', function(e) {
-                e.preventDefault();
-                const form = $(this);
-                $.ajax({
-                    url: contextPath + 'contact/send',
-                    method: 'POST',
-                    data: form.serialize(),
-                    success: function(response) {
-                        showNotification(response.message || 'Tin nhắn đã được gửi thành công!');
-                        form[0].reset();
-                    },
-                    error: function(xhr) {
-                        let errorMessage = 'Có lỗi xảy ra khi gửi tin nhắn!';
-                        if (xhr.responseJSON && xhr.responseJSON.message) {
-                            errorMessage = xhr.responseJSON.message;
-                        }
-                        showNotification(errorMessage, true);
+        // Handle form submission
+        $('#contactForm').on('submit', function(e) {
+            e.preventDefault();
+            const form = $(this);
+            $.ajax({
+                url: contextPath + 'contact/send',
+                method: 'POST',
+                data: form.serialize(),
+                success: function(response) {
+                    // Hiển thị thông báo cảm ơn
+                    showNotification(
+                        'Cảm ơn bạn đã gửi phản hồi đến chúng tôi!<br>Chúng tôi sẽ phản hồi sớm lại cho bạn.'
+                    );
+                    form[0].reset();
+                },
+                error: function(xhr) {
+                    let errorMessage = 'Có lỗi xảy ra khi gửi tin nhắn!';
+                    if (xhr.responseJSON && xhr.responseJSON.message) {
+                        errorMessage = xhr.responseJSON.message;
                     }
-                });
+                    showNotification(errorMessage, true);
+                }
             });
         });
-    </script>
+    });
+</script>
+
 </body>
 </html>
